@@ -38,4 +38,8 @@ export class KasService {
   createAccount() {
     return this.sendRequest('POST', '/v2/account');
   }
+
+  findAccount() {
+    return this.sendRequest('GET', '/v2/account');
+  }
 }
