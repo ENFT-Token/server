@@ -22,3 +22,13 @@
 ```sh
 > nest start:dev
 ```
+
+- .env 설정
+  해당 값은 선규에게 문의
+
+```sh
+KAS_PUBLIC_ACCESS_KEY= # kas public api key
+KAS_PRIVATE_ACCESS_KEY= # kas private api key
+KAS_CHAIN_ID= # mainnet (8231) or baobab (1001)
+JWT_SECRET_KEY= # jwt key
+```
