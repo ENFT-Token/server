@@ -11,5 +11,5 @@ export class CreateUserDto {
   password: string;
 
   @IsString()
-  publicKey: string;
+  address: string;
 }

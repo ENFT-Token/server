@@ -4,5 +4,7 @@ import { KasService } from './kas.service';
 
 @Module({
   imports: [HttpModule],
+  providers: [KasService],
+  exports: [KasService],
 })
 export class KasModule {}

@@ -2,8 +2,8 @@ import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { KasService } from 'src/kas/kas.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
-import { LocalAuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
+import { LoginDto, RegisterDto } from './dto/auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -13,32 +13,23 @@ export class AuthController {
     private readonly userSevice: UserService,
   ) {}
 
-  @UseGuards(LocalAuthGuard)
   @Post('/login')
-  postLogin(@Req() req) {
-    const status = this.authService.login() ? 'succ' : 'fail';
-    return {
-      status,
-      user: req.user,
-      publicKey: 'TEST_KEY',
-    };
+  login(@Body() user: LoginDto) {
+    return this.authService.login(user.email, user.password);
   }
 
   @Post('/register')
-  register(@Body() createUserDto: CreateUserDto) {
-    return this.userSevice.create(createUserDto);
-  }
-  @Post('/createAccount')
-  async createAccount(@Req() req) {
-    const response = await this.kasService.createAccount();
-    console.log(response);
-    return response;
+  async register(@Body() user: RegisterDto) {
+    const { address } = await this.kasService.createAccount();
+    return this.userSevice.create({
+      address,
+      ...user,
+    });
   }
 
   @Get('/findAccount')
-  async findAccount(@Req() req) {
+  async findAccount() {
     const response = await this.kasService.findAccount();
-    console.log(response);
     return response;
   }
 }

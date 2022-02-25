@@ -1,7 +1,10 @@
 import { HttpService } from '@nestjs/axios';
 import { HttpException, Injectable } from '@nestjs/common';
-import { AxiosRequestConfig, Method } from 'axios';
+import { Method } from 'axios';
 import { catchError, map } from 'rxjs/operators';
+import { ICreateAccount } from './kas.interface';
+import { firstValueFrom } from 'rxjs';
+
 @Injectable()
 export class KasService {
   constructor(private httpService: HttpService) {}
@@ -35,11 +38,11 @@ export class KasService {
       );
   }
 
-  createAccount() {
-    return this.sendRequest('POST', '/v2/account');
+  createAccount(): Promise<ICreateAccount> {
+    return firstValueFrom(this.sendRequest('POST', '/v2/account')); // RxJs to Promise
   }
 
   findAccount() {
-    return this.sendRequest('GET', '/v2/account');
+    return firstValueFrom(this.sendRequest('GET', '/v2/account')); // RxJs to Promise
   }
 }
