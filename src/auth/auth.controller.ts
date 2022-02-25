@@ -1,10 +1,14 @@
 import { Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { KasService } from 'src/kas/kas.service';
 import { LocalAuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly kasService: KasService,
+  ) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
@@ -15,5 +19,12 @@ export class AuthController {
       user: req.user,
       publicKey: 'TEST_KEY',
     };
+  }
+
+  @Post('/createAccount')
+  async createAccount(@Req() req) {
+    const response = await this.kasService.createAccount();
+    console.log(response);
+    return response;
   }
 }

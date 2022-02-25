@@ -4,10 +4,13 @@ import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
+import { HttpModule } from '@nestjs/axios';
+import { KasModule } from './kas/kas.module';
+import { KasService } from './kas/kas.service';
 
 @Module({
   controllers: [AppController, AuthController],
-  providers: [AppService, AuthService],
-  imports: [AuthModule],
+  providers: [AppService, AuthService, KasService],
+  imports: [AuthModule, HttpModule, KasModule],
 })
 export class AppModule {}
