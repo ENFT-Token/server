@@ -4,16 +4,24 @@ import { Method } from 'axios';
 import { catchError, map } from 'rxjs/operators';
 import { ICreateAccount } from './kas.interface';
 import { firstValueFrom } from 'rxjs';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class KasService {
-  constructor(private httpService: HttpService) {}
+  constructor(
+    private httpService: HttpService,
+    private configService: ConfigService,
+  ) {}
 
   sendRequest(method: Method, url: string, data?: any) {
     const baseURL = 'https://wallet-api.klaytnapi.com';
-    const KAS_PUBLIC_ACCESS_KEY = process.env.KAS_PUBLIC_ACCESS_KEY;
-    const KAS_PRIVATE_ACCESS_KEY = process.env.KAS_PRIVATE_ACCESS_KEY;
-    const KAS_CHAIN_ID = process.env.KAS_CHAIN_ID;
+    const KAS_PUBLIC_ACCESS_KEY = this.configService.get(
+      'KAS_PUBLIC_ACCESS_KEY',
+    );
+    const KAS_PRIVATE_ACCESS_KEY = this.configService.get(
+      'KAS_PRIVATE_ACCESS_KEY',
+    );
+    const KAS_CHAIN_ID = this.configService.get('KAS_CHAIN_ID');
     return this.httpService
       .request({
         method,

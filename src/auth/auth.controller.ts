@@ -4,6 +4,8 @@ import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
+import { LocalAuthGuard } from './local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -13,9 +15,11 @@ export class AuthController {
     private readonly userSevice: UserService,
   ) {}
 
+  @UseGuards(LocalAuthGuard)
   @Post('/login')
-  login(@Body() user: LoginDto) {
-    return this.authService.login(user.email, user.password);
+  login(@Req() req) {
+    console.log('/login', req.user);
+    return this.authService.login(req.user);
   }
 
   @Post('/register')
@@ -26,7 +30,7 @@ export class AuthController {
       ...user,
     });
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get('/findAccount')
   async findAccount() {
     const response = await this.kasService.findAccount();

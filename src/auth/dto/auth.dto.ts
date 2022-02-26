@@ -18,3 +18,14 @@ export class LoginDto {
   @IsString()
   password: string;
 }
+
+export class UserWithoutPassword {
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  nickname: string;
+
+  @IsString()
+  address: string;
+}
