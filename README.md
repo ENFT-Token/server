@@ -20,7 +20,8 @@
 - API Server 실행
 
 ```sh
-> nest start:dev
+> yarn install
+> yarn start:dev
 ```
 
 - .env 설정
