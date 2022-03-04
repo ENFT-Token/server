@@ -2,18 +2,18 @@ import { ForbiddenException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './user.entity';
+import { AdminUser } from './admin_user.entity';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
+    @InjectRepository(AdminUser)
+    private adminUserRepository: Repository<AdminUser>,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const isExist = await this.userRepository.findOne({
+    const isExist = await this.adminUserRepository.findOne({
       email: createUserDto.email,
     });
     if (isExist) {
@@ -25,11 +25,14 @@ export class UserService {
     }
     const { password, ...result } = createUserDto;
     const bcryptPassword = await bcrypt.hash(password, 10);
-    await this.userRepository.save({ password: bcryptPassword, ...result });
+    await this.adminUserRepository.save({
+      password: bcryptPassword,
+      ...result,
+    });
     return result;
   }
 
   async findOne(email: string) {
-    return this.userRepository.findOne({ email });
+    return this.adminUserRepository.findOne({ email });
   }
 }
