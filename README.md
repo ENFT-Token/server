@@ -2,6 +2,10 @@
 
 ## Usage
 
+- Require File
+
+  - keystore.json
+
 - MaraDB 실행
 
 ```sh
@@ -32,4 +36,5 @@ KAS_PUBLIC_ACCESS_KEY= # kas public api key
 KAS_PRIVATE_ACCESS_KEY= # kas private api key
 KAS_CHAIN_ID= # mainnet (8231) or baobab (1001)
 JWT_SECRET_KEY= # jwt key
+KAS_PASSWORD = # kas keystore.json password
 ```
