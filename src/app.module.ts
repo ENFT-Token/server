@@ -7,6 +7,7 @@ import { UserModule } from './admin_user/admin_user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
+import { CaverModule } from './caver/caver.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ConfigModule } from '@nestjs/config';
     UserModule,
     AuthModule,
     HttpModule,
+    CaverModule,
   ],
   controllers: [AppController],
   providers: [AppService],
