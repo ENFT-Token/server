@@ -5,11 +5,9 @@ import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { UserModule } from 'src/admin_user/admin_user.module';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
-import { KasService } from 'src/kas/kas.service';
-import { HttpService } from '@nestjs/axios';
-import { KasModule } from 'src/kas/kas.module';
 import { LocalStrategy } from './local.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CaverModule } from 'src/caver/caver.module';
 
 @Module({
   imports: [
@@ -21,14 +19,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         const options: JwtModuleOptions = {
           secret: configService.get('JWT_SECRET_KEY'),
           signOptions: {
-            expiresIn: '5m',
+            expiresIn: '24h',
           },
         };
         return options;
       },
       inject: [ConfigService],
     }),
-    KasModule,
+    CaverModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],

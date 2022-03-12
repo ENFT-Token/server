@@ -1,24 +1,33 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as fs from 'fs';
-import Caver from 'caver-js';
+import Caver, { AbiItem, Contract, Keystore } from 'caver-js';
 import { ConfigService } from '@nestjs/config';
+import ABI from './contract.abi.json';
 
 @Injectable()
 export class CaverService implements OnModuleInit {
+  caver: Caver;
+  contract: Contract;
+
   constructor(private configService: ConfigService) {}
 
   onModuleInit() {
-    const caver = new Caver('https://api.baobab.klaytn.net:8651/');
+    this.caver = new Caver(this.configService.get('KLAYTN_NETWORK_URL'));
     const keystore = fs.readFileSync('./keystore.json', 'utf8');
 
     // Decrypt keystore
-    const keyring = caver.wallet.keyring.decrypt(
+    const keyring = this.caver.wallet.keyring.decrypt(
       keystore as any,
       this.configService.get('KAS_PASSWORD'),
     );
     console.log(keyring);
 
     // Add to caver.wallet
-    caver.wallet.add(keyring);
+    this.caver.wallet.add(keyring);
+
+    this.contract = new this.caver.contract(
+      ABI as AbiItem[],
+      this.configService.get('CONTRACT_ADDRESS'),
+    );
   }
 }

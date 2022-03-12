@@ -1,6 +1,6 @@
 import { ForbiddenException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AdminUser } from './admin_user.entity';
 import * as bcrypt from 'bcrypt';
@@ -32,7 +32,11 @@ export class UserService {
     return result;
   }
 
-  async findOne(email: string) {
+  async findOneByEmail(email: string) {
     return this.adminUserRepository.findOne({ email });
+  }
+
+  async find(options?: FindManyOptions<AdminUser>) {
+    return this.adminUserRepository.find(options);
   }
 }
