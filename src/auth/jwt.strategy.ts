@@ -1,7 +1,7 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-import { AdminUser } from 'src/admin_user/admin_user.entity';
+import { User } from 'src/user/user.entity';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     console.log(configService.get('KAS_CHAIN_ID'));
   }
 
-  async validate(payload: AdminUser) {
+  async validate(payload: User) {
     console.log(payload);
     return payload;
   }
