@@ -37,4 +37,5 @@ KAS_PRIVATE_ACCESS_KEY= # kas private api key
 KAS_CHAIN_ID= # mainnet (8231) or baobab (1001)
 JWT_SECRET_KEY= # jwt key
 KAS_PASSWORD = # kas keystore.json password
+CONTRACT_ADDRESS=0x52307bf84bbDB1A3C42F46f2D2417Fd8ea756695
 ```
