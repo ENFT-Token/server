@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Board } from 'src/community/board/board.entity';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -25,4 +26,10 @@ export class User {
 
   @Column()
   isAdmin: boolean;
+
+  @OneToMany(
+    type => Board,
+    board => board.writer
+  )
+  board: Board[];
 }
