@@ -5,6 +5,7 @@ import { RegisterDto } from './dto/auth.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 import { CaverService } from 'src/caver/caver.service';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -22,10 +23,9 @@ export class AuthController {
   }
 
   @Post('/register')
-  async register(@Body() user: RegisterDto) {
-    const [address] = await this.CaverService.caver.wallet.generate(1);
+  async register(@Body() user:CreateUserDto) {
+    
     return this.userSevice.create({
-      address,
       ...user,
     });
   }

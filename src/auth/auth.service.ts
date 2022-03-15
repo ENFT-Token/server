@@ -29,12 +29,10 @@ export class AuthService {
   async login(user: CreateUserDto) {
     const payload = {
       email: user.email,
-      address: user.address,
       nickname: user.nickname,
     };
     return {
       access_token: this.jwtService.sign(payload),
-      address: user.address,
       status: 'success',
     };
   }

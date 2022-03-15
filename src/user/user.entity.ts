@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -15,5 +15,14 @@ export class User {
   password: string;
 
   @Column()
-  address: string;
+  location: string;
+
+  @CreateDateColumn()
+  createAt: Date;
+  
+  @UpdateDateColumn()
+  updateAt: Date;
+
+  @Column()
+  isAdmin: boolean;
 }
