@@ -15,14 +15,15 @@ export class BoardController {
     ){}
 
     @Post()
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     @UsePipes(ValidationPipe)
     async createBoard(
         @Req() req
     ): Promise<Board>{
         const board = req.body
-        const user = await this.userService.findOneByEmail(req.user.email);
-        return this.boardService.createBoard(board, user);
+        // const user = await this.userService.findOneByEmail(req.user.email);
+        // return this.boardService.createBoard(board, user);
+        return this.boardService.createBoard(board);
     }
 
     @Get()
