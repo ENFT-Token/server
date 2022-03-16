@@ -1,7 +1,7 @@
 import { ForbiddenException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, UserEmailDto, UserNicknameDto } from './dto/create-user.dto';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
 
@@ -12,11 +12,12 @@ export class UserService {
     private userRepository: Repository<User>,
   ) {}
 
-  async findOneByEmail(email: string){
+  async findOneByEmail(email: string): Promise<User>{
     return this.userRepository.findOne({email});
   }
 
-  async findEmail(email: string){
+  async findEmail(findEmail: UserEmailDto): Promise<{usable:boolean, message:string}>{
+    const { email } = findEmail;
     const isExist = await this.userRepository.findOne({email})
     if(isExist){
       return {
@@ -31,7 +32,8 @@ export class UserService {
     }
   }
 
-  async findNickname(nickname: string){
+  async findNickname(findNickname: UserNicknameDto): Promise<{usable:boolean, message:string}>{
+    const {nickname} = findNickname
     const isExist = await this.userRepository.findOne({nickname})
     if(isExist){
       return {

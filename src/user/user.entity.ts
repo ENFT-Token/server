@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Board } from 'src/community/board/board.entity';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
@@ -7,15 +8,19 @@ export class User {
   id: number;
 
   @PrimaryColumn()
+  @ApiProperty()
   nickname: string;
 
   @PrimaryColumn()
+  @ApiProperty()
   email: string;
 
   @Column()
+  @ApiProperty()
   password: string;
 
   @Column()
+  @ApiProperty()
   location: string;
 
   @CreateDateColumn()
@@ -25,11 +30,13 @@ export class User {
   updateAt: Date;
 
   @Column()
+  @ApiProperty()
   isAdmin: boolean;
 
   @OneToMany(
     type => Board,
     board => board.writer
   )
+  @ApiProperty()
   board: Board[];
 }

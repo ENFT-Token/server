@@ -9,6 +9,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { CaverModule } from './caver/caver.module';
 import { BoardModule } from './community/board/board.module';
+import { ImageModule } from './community/image/image.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { BoardModule } from './community/board/board.module';
     HttpModule,
     CaverModule,
     BoardModule,
+    ImageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
