@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { CaverModule } from './caver/caver.module';
 import { BoardModule } from './community/board/board.module';
 import { ImageModule } from './community/image/image.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ImageModule } from './community/image/image.module';
     CaverModule,
     BoardModule,
     ImageModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
