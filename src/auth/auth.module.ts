@@ -8,6 +8,7 @@ import { AuthController } from './auth.controller';
 import { LocalStrategy } from './local.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CaverModule } from 'src/caver/caver.module';
+import { AdminModule } from 'src/admin/admin.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CaverModule } from 'src/caver/caver.module';
       inject: [ConfigService],
     }),
     CaverModule,
+    AdminModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],

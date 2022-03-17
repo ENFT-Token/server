@@ -1,37 +1,40 @@
-import { User } from "src/user/user.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { User } from 'src/user/user.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
-export class Board{
-    @PrimaryGeneratedColumn()
-    id: number;
+export class Board {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    title: string;
+  @Column()
+  title: string;
 
-    @Column()
-    content: string;
+  @Column()
+  content: string;
 
-    @CreateDateColumn()
-    createAt: Date;
+  @CreateDateColumn()
+  createAt: Date;
 
-    @UpdateDateColumn()
-    updateAt: Date;
+  @UpdateDateColumn()
+  updateAt: Date;
 
-    @DeleteDateColumn()
-    deleteAt: Date;
+  @DeleteDateColumn()
+  deleteAt: Date;
 
-    @Column()
-    lookup: number;
+  @Column()
+  lookup: number;
 
-    @Column()
-    location: string;
+  @Column()
+  location: string;
 
-    @ManyToOne(
-        type=> User,
-        writer=> writer.board,
-        { eager: true },
-    )
-    writer: User;
-    
+  @ManyToOne((type) => User, (writer) => writer.board, { eager: true })
+  writer: User;
 }
