@@ -6,11 +6,8 @@ import { Board } from './board.entity';
 import { UserModule } from 'src/user/user.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Board]),
-    UserModule
-  ],
+  imports: [TypeOrmModule.forFeature([Board]), UserModule],
   providers: [BoardService],
-  controllers: [BoardController]
+  controllers: [BoardController],
 })
 export class BoardModule {}

@@ -91,9 +91,11 @@ export class UserService {
     const bcryptPassword = await bcrypt.hash(password, salt);
 
     if (result.isAdmin) {
+      const keyring = await this.caverService.caver.wallet.keyring.generate();
       await this.walletRepository.save({
         email: result.email,
-        address: this.caverService.caver.wallet.generate(1)[0],
+        address: keyring.address,
+        privateKey: keyring.key.privateKey,
       });
     }
     await this.userRepository.save({

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard, JwtAuthGuardForAdmin } from 'src/auth/jwt-auth.guard';
 import { CaverService } from 'src/caver/caver.service';
 import { UserService } from 'src/user/user.service';
@@ -24,7 +24,9 @@ export class AdminController {
     const { password, location } = await this.userService.findOneByEmail(
       user.email,
     );
-    const { address } = await this.userService.findWallet(user.email);
+    const { address, privateKey } = await this.userService.findWallet(
+      user.email,
+    );
     console.log('abd', address);
 
     const token = jwt.sign(
@@ -44,13 +46,13 @@ export class AdminController {
     // 돈은 다른 사람이 내야함
     // 수수료 대납 구현
 
-    // 현재 JwtAuthGuard는 유저도 접근 가능한데 막자
-
     const _mintNFT = await this.caverService.contract.methods
       .mintNFT(mint.target, token)
       .send({
-        from: this.caverService.keyring.address,
-        gas: '0x4bfd200',
+        from: address,
+        gas: 3000000,
+        feeDelegation: true,
+        feePayer: this.caverService.feeKeyring.address,
       });
     return _mintNFT;
   }

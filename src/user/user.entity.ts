@@ -22,6 +22,10 @@ export class Wallet {
   @Column({ unique: true })
   @ApiProperty()
   address: string | null;
+
+  @Column({ unique: true })
+  @ApiProperty()
+  privateKey: string | null;
 }
 
 @Entity()
