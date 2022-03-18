@@ -5,6 +5,7 @@ import { UserService } from 'src/user/user.service';
 import { MintDto } from './dto/admin.dto';
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
+import { ApiOperation } from '@nestjs/swagger';
 
 interface IUser {
   email: string;
@@ -18,16 +19,16 @@ export class AdminController {
     private readonly caverService: CaverService,
   ) {}
 
+  @ApiOperation({
+    summary: '민팅 API => 기간과 헬스장 정보담긴 JWT 스마트 컨트랙트에 전송',
+  })
   @UseGuards(JwtAuthGuardForAdmin)
   @Post('/mint')
   async _mint(@Req() { user }: { user: IUser }, @Body() mint: MintDto) {
     const { password, location } = await this.userService.findOneByEmail(
       user.email,
     );
-    const { address, privateKey } = await this.userService.findWallet(
-      user.email,
-    );
-    console.log('abd', address);
+    const { address } = await this.userService.findWallet(user.email);
 
     const token = jwt.sign(
       {
@@ -40,7 +41,6 @@ export class AdminController {
         expiresIn: `${mint.day}d`,
       },
     );
-    console.log(mint.target, token);
 
     // from은 관리자 지갑이여야하고
     // 돈은 다른 사람이 내야함
@@ -55,5 +55,20 @@ export class AdminController {
         feePayer: this.caverService.feeKeyring.address,
       });
     return _mintNFT;
+  }
+
+  @ApiOperation({
+    summary: '관리자가 소유한 멤버의 지갑 주소 API',
+  })
+  @UseGuards(JwtAuthGuardForAdmin)
+  @Get('/memberAddress')
+  async _member(@Req() { user }: { user: IUser }) {
+    const { address } = await this.userService.findWallet(user.email);
+    const owner = await this.caverService.contract.methods
+      .ownerByMember()
+      .call({
+        from: address,
+      });
+    return owner;
   }
 }
