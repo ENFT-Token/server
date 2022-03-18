@@ -38,6 +38,7 @@ export class AuthController {
 
     return _user;
   }
+
   @UseGuards(JwtAuthGuard)
   @Get('/findAccount')
   async findAccount() {

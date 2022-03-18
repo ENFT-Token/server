@@ -19,9 +19,9 @@ export class Wallet {
   @ApiProperty()
   email: string;
 
-  @Column({ nullable: true })
+  @Column({ unique: true })
   @ApiProperty()
-  address: string;
+  address: string | null;
 }
 
 @Entity()
@@ -54,10 +54,6 @@ export class User {
   @Column()
   @ApiProperty()
   isAdmin: boolean;
-
-  @OneToOne(() => Wallet, (wallet) => wallet.email, { nullable: true })
-  @JoinColumn({ name: 'email' })
-  wallet: Wallet | null;
 
   @OneToMany((type) => Board, (board) => board.writer)
   @ApiProperty()

@@ -8,7 +8,7 @@ import ABI from './contract.abi.json';
 export class CaverService implements OnModuleInit {
   caver: Caver;
   contract: Contract;
-
+  keyring: any;
   constructor(private configService: ConfigService) {}
 
   onModuleInit() {
@@ -21,7 +21,7 @@ export class CaverService implements OnModuleInit {
       this.configService.get('KAS_PASSWORD'),
     );
     console.log(keyring);
-
+    this.keyring = keyring;
     // Add to caver.wallet
     this.caver.wallet.add(keyring);
 

@@ -25,6 +25,10 @@ export class UserService {
     return this.userRepository.findOne({ email });
   }
 
+  async findWallet(email: string): Promise<Wallet> {
+    return this.walletRepository.findOne({ email });
+  }
+
   async findEmail(
     findEmail: UserEmailDto,
   ): Promise<{ usable: boolean; message: string }> {
@@ -86,18 +90,15 @@ export class UserService {
     const salt = await bcrypt.genSalt();
     const bcryptPassword = await bcrypt.hash(password, salt);
 
-    const wallet: Wallet = new Wallet();
-    wallet.email = result.email;
-    wallet.address = null;
     if (result.isAdmin) {
-      wallet.address = this.caverService.caver.wallet.generate(1)[0];
+      await this.walletRepository.save({
+        email: result.email,
+        address: this.caverService.caver.wallet.generate(1)[0],
+      });
     }
-    await this.walletRepository.save(wallet);
-
     await this.userRepository.save({
       password: bcryptPassword,
       ...result,
-      wallet,
     });
     return result;
   }
