@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard, JwtAuthGuardForAdmin } from 'src/auth/jwt-auth.guard';
 import { CaverService } from 'src/caver/caver.service';
 import { UserService } from 'src/user/user.service';
 import { MintDto } from './dto/admin.dto';
@@ -18,7 +18,7 @@ export class AdminController {
     private readonly caverService: CaverService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuardForAdmin)
   @Post('/mint')
   async _mint(@Req() { user }: { user: IUser }, @Body() mint: MintDto) {
     const { password, location } = await this.userService.findOneByEmail(
@@ -39,6 +39,13 @@ export class AdminController {
       },
     );
     console.log(mint.target, token);
+
+    // from은 관리자 지갑이여야하고
+    // 돈은 다른 사람이 내야함
+    // 수수료 대납 구현
+
+    // 현재 JwtAuthGuard는 유저도 접근 가능한데 막자
+
     const _mintNFT = await this.caverService.contract.methods
       .mintNFT(mint.target, token)
       .send({
