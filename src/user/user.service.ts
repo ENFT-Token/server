@@ -6,10 +6,11 @@ import {
   UserEmailDto,
   UserNicknameDto,
 } from './dto/create-user.dto';
-import { User } from './user.entity';
+import { Approve, User } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import { Wallet } from 'src/user/user.entity';
 import { CaverService } from 'src/caver/caver.service';
+import { CreateApproveDto } from './dto/create-approve.dto';
 
 @Injectable()
 export class UserService {
@@ -18,6 +19,8 @@ export class UserService {
     private userRepository: Repository<User>,
     @InjectRepository(Wallet)
     private walletRepository: Repository<Wallet>,
+    @InjectRepository(Approve)
+    private approveRepository: Repository<Approve>,
     private caverService: CaverService,
   ) {}
 
@@ -27,6 +30,14 @@ export class UserService {
 
   async findWallet(email: string): Promise<Wallet> {
     return this.walletRepository.findOne({ email });
+  }
+
+  findApprove(approve: {
+    email?: string;
+    requestLocation?: string;
+    requestDay?: number;
+  }): Promise<Approve[]> {
+    return this.approveRepository.find(approve);
   }
 
   async findEmail(
@@ -63,6 +74,26 @@ export class UserService {
         message: '사용 가능한 닉네임 입니다.',
       };
     }
+  }
+
+  async requestApprove(createApproveDto: CreateApproveDto) {
+    const approveList = await this.approveRepository.find({
+      email: createApproveDto.email,
+    });
+    for (const approve of approveList) {
+      if (approve.requestLocation === approve.requestLocation) {
+        throw new ForbiddenException({
+          statusCode: HttpStatus.FORBIDDEN,
+          message: '이미 신청한 장소입니다.',
+          error: 'Forbidden',
+        });
+      }
+    }
+    this.approveRepository.save(createApproveDto);
+  }
+
+  async approveComplete(createApproveDto: CreateApproveDto) {
+    await this.approveRepository.delete(createApproveDto);
   }
 
   async create(createUserDto: CreateUserDto) {

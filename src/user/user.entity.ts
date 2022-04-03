@@ -63,3 +63,22 @@ export class User {
   @ApiProperty()
   board: Board[];
 }
+
+@Entity()
+export class Approve {
+  @PrimaryColumn()
+  @ApiProperty()
+  email: string;
+
+  @Column()
+  @ApiProperty()
+  address: string;
+
+  @Column()
+  @ApiProperty()
+  requestDay: number;
+
+  @Column()
+  @ApiProperty()
+  requestLocation: string;
+}

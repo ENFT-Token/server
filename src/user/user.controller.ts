@@ -4,10 +4,12 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Post,
   Query,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CaverService } from 'src/caver/caver.service';
+import { CreateApproveDto } from './dto/create-approve.dto';
 import { UserEmailDto, UserNicknameDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 
@@ -71,5 +73,14 @@ export class UserController {
     }
 
     return nfts;
+  }
+
+  @Post('/approve')
+  @ApiOperation({ summary: 'user가 관리자한테 승인 요청' })
+  async approve(@Body() approve: CreateApproveDto) {
+    await this.userService.requestApprove(approve);
+    return {
+      msg: '요청 완료',
+    };
   }
 }
