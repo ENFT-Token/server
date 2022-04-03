@@ -6,6 +6,7 @@ import { SocketIoAdapter } from './adapters/socker-io.adapters';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
+  app.enableCors();
   const options = new DocumentBuilder()
     .setTitle('ENFT API')
     .setDescription('ENFT api')
