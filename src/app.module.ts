@@ -11,6 +11,7 @@ import { CaverModule } from './caver/caver.module';
 import { BoardModule } from './community/board/board.module';
 import { ImageModule } from './community/image/image.module';
 import { AdminModule } from './admin/admin.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AdminModule } from './admin/admin.module';
     BoardModule,
     ImageModule,
     AdminModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
