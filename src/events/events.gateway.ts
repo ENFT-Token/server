@@ -10,7 +10,7 @@ interface IChatMsg {
   msg: string;
 }
 
-@WebSocketGateway(8080, { cors: true })
+@WebSocketGateway(8080, { path: '/chat', cors: true })
 export class EventsGateway {
   @WebSocketServer()
   server: Server;
