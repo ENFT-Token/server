@@ -6,6 +6,8 @@ import { MintDto } from './dto/admin.dto';
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import { ApiOperation } from '@nestjs/swagger';
+import { AdminService } from './admin.service';
+import { CreateApproveDto } from 'src/user/dto/create-approve.dto';
 
 interface IUser {
   email: string;
@@ -16,6 +18,7 @@ interface IUser {
 export class AdminController {
   constructor(
     private readonly userService: UserService,
+    private readonly adminService: AdminService,
     private readonly caverService: CaverService,
   ) {}
 
@@ -30,30 +33,13 @@ export class AdminController {
     );
     const { address } = await this.userService.findWallet(user.email);
 
-    const token = jwt.sign(
-      {
-        place: location,
-        start_date: moment().format('YYYY-MM-DD'),
-        end_date: moment().add(mint.day, 'days').format('YYYY-MM-DD'),
-      },
+    const _mintNFT = await this.adminService.mint(
+      mint.target,
+      address,
+      location,
+      mint.day,
       password,
-      {
-        expiresIn: `${mint.day}d`,
-      },
     );
-
-    // from은 관리자 지갑이여야하고
-    // 돈은 다른 사람이 내야함
-    // 수수료 대납 구현
-
-    const _mintNFT = await this.caverService.contract.methods
-      .mintNFT(mint.target, token)
-      .send({
-        from: address,
-        gas: 3000000,
-        feeDelegation: true,
-        feePayer: this.caverService.feeKeyring.address,
-      });
     return _mintNFT;
   }
 
@@ -70,5 +56,42 @@ export class AdminController {
         from: address,
       });
     return owner;
+  }
+
+  @ApiOperation({
+    summary: '유저가 관리자에게 보낸 승인 리스트',
+  })
+  @UseGuards(JwtAuthGuardForAdmin)
+  @Get('/approve/list')
+  async approveList(@Req() { user }: { user: IUser }) {
+    const { location } = await this.userService.findOneByEmail(user.email);
+    const list = await this.userService.findApprove({
+      requestLocation: location,
+    });
+    return list;
+  }
+
+  @ApiOperation({
+    summary: '유저 NFT 발급 승인',
+  })
+  @UseGuards(JwtAuthGuardForAdmin)
+  @Post('/approve/complete')
+  async approveComplete(
+    @Req() { user }: { user: IUser },
+    @Body() approve: CreateApproveDto,
+  ) {
+    const { password, location } = await this.userService.findOneByEmail(
+      user.email,
+    );
+    const { address } = await this.userService.findWallet(user.email);
+    const _mintNFT = await this.adminService.mint(
+      approve.address,
+      address,
+      location,
+      approve.requestDay,
+      password,
+    );
+    await this.userService.approveComplete(approve);
+    return _mintNFT;
   }
 }
