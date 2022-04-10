@@ -14,9 +14,16 @@ interface IChatMsg {
   msg: string;
 }
 
-@WebSocketGateway(8080, { path: '/chat', cors: true, transports:['websocket'] , autoConnect:false, forceNew:true})
-export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-
+@WebSocketGateway(8080, {
+  path: '/chat',
+  cors: true,
+  transports: ['websocket'],
+  autoConnect: false,
+  forceNew: true,
+})
+export class EventsGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
   private logger: Logger = new Logger('ChatGateway');
 
   @WebSocketServer()
@@ -25,11 +32,11 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   afterInit(server: Server) {
     this.logger.log('Init');
   }
-  
+
   handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected: ${client.id}`);
   }
-  
+
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id}`);
   }
