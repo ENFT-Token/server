@@ -26,14 +26,17 @@ export class AuthService {
   }
 
   async login(user: CreateUserDto) {
+    const { password, ..._user } = user;
     const payload = {
-      email: user.email,
-      nickname: user.nickname,
-      isAdmin: user.isAdmin,
+      email: _user.email,
+      isAdmin: _user.isAdmin,
     };
     return {
       access_token: this.jwtService.sign(payload),
       status: 'success',
+      ..._user,
+      profileImg: 'http://placeimg.com/640/480/any',
+      phone: '010-5629-1265', // TODO: 더미 데이터 나중에 SQL로 바꿀거임.
     };
   }
 }
