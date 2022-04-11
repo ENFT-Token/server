@@ -26,14 +26,7 @@ export class UserService {
     private caverService: CaverService,
   ) {}
 
-  async allIdentity() {
-    const allData = await this.adminRepository.find({
-      select: ['identityName'],
-    });
-    return allData?.map((v: { identityName: string }) => v['identityName']);
-  }
-
-  findOneByWallet(address: string): Promise<User> {
+  async findOneByWallet(address: string): Promise<User> {
     return this.userRepository.findOne({ address });
   }
 

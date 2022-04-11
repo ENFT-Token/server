@@ -90,11 +90,4 @@ export class UserController {
       msg: '요청 완료',
     };
   }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('/allIdentity')
-  @ApiOperation({ summary: '모든 관리자의 헬스장 이름 출력.' })
-  async allIdentity() {
-    return await this.userService.allIdentity();
-  }
 }
