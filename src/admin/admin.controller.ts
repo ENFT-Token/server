@@ -31,15 +31,14 @@ export class AdminController {
   @UseGuards(JwtAuthGuardForAdmin)
   @Post('/mint')
   async _mint(@Req() { user }: { user: IAdminJwt }, @Body() mint: MintDto) {
-    const { identityName, address, privateKey } = await this.adminService.findOneByEmail(
-      user.email,
-    );
+    const { identityName, address, privateKey } =
+      await this.adminService.findOneByEmail(user.email);
     const _mintNFT = await this.adminService.mint(
       mint.target,
       address,
       identityName,
       mint.day,
-      'ENFT',
+      privateKey,
     );
     return _mintNFT;
   }
@@ -81,14 +80,15 @@ export class AdminController {
     @Req() { user }: { user: IAdminJwt },
     @Body() approve: CreateApproveDtoWithAddress,
   ) {
-    const { identityName, address } =
-      await this.adminService.findOneByEmail(user.email);
+    const { identityName, address, privateKey } = await this.adminService.findOneByEmail(
+      user.email,
+    );
     const _mintNFT = await this.adminService.mint(
       approve.address,
       address,
       identityName,
       approve.requestDay,
-      'ENFT',
+      privateKey,
     );
     await this.userService.approveComplete(approve);
     return _mintNFT;
