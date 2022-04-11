@@ -5,13 +5,19 @@ import {
   HttpException,
   HttpStatus,
   Post,
-  Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CaverService } from 'src/caver/caver.service';
 import { CreateApproveDto } from './dto/create-approve.dto';
-import { UserEmailDto, UserNicknameDto } from './dto/create-user.dto';
+import { UserNicknameDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
+
+interface IUserJwt {
+  address: string;
+}
 
 @Controller('user')
 @ApiTags('유저 관련 API')
@@ -21,6 +27,7 @@ export class UserController {
     private readonly caverService: CaverService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get('/nickname')
   @ApiOperation({ summary: 'nickname 중복체크 API' })
   @ApiBody({ type: UserNicknameDto })
@@ -30,18 +37,11 @@ export class UserController {
     return this.userService.findNickname(nickname);
   }
 
-  @Get('/email')
-  @ApiOperation({ summary: 'email 중복체크 API' })
-  @ApiBody({ type: UserEmailDto })
-  checkEmailDuplicate(
-    @Body() email: UserEmailDto,
-  ): Promise<{ usable: boolean; message: string }> {
-    return this.userService.findEmail(email);
-  }
-
+  @UseGuards(JwtAuthGuard)
   @Get('/myNft')
   @ApiOperation({ summary: 'user가 소유한 nft 출력' })
-  async myNft(@Query() { address }: { address: string }) {
+  async myNft(@Req() { user }: { user: IUserJwt }) {
+    const { address } = user;
     console.log(address);
     if (!address) {
       throw new HttpException(
@@ -75,10 +75,17 @@ export class UserController {
     return nfts;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('/approve')
   @ApiOperation({ summary: 'user가 관리자한테 승인 요청' })
-  async approve(@Body() approve: CreateApproveDto) {
-    await this.userService.requestApprove(approve);
+  async approve(
+    @Req() { user }: { user: IUserJwt },
+    @Body() approve: CreateApproveDto,
+  ) {
+    await this.userService.requestApprove({
+      ...approve,
+      address: user.address,
+    });
     return {
       msg: '요청 완료',
     };

@@ -2,17 +2,33 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { CreateUserDtoWithPrivateKey } from 'src/user/dto/create-user.dto';
+import { AdminService } from 'src/admin/admin.service';
+import { CreateAdminDto } from '../admin/dto/create-admin.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
+    private readonly adminService: AdminService,
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.userService.findOneByEmail(email);
+  async validateUser(wallet: string, privateKey: string): Promise<any> {
+    const user = await this.userService.findOneByWallet(wallet);
+    if (user) {
+      const isMatch = await bcrypt.compare(user.privateKey, privateKey);
+      if (isMatch) {
+        const { privateKey, ...result } = user;
+        return result;
+      }
+      return false;
+    }
+    return null;
+  }
+
+  async validateAdmin(email: string, password: string): Promise<any> {
+    const user = await this.adminService.findOneByEmail(email);
 
     if (user) {
       const isMatch = await bcrypt.compare(password, user.password);
@@ -25,18 +41,28 @@ export class AuthService {
     return null;
   }
 
-  async login(user: CreateUserDto) {
-    const { password, ..._user } = user;
+  async userLogin(user: CreateUserDtoWithPrivateKey) {
+    const { privateKey, ..._user } = user;
     const payload = {
-      email: _user.email,
-      isAdmin: _user.isAdmin,
+      address: _user.address,
     };
     return {
       access_token: this.jwtService.sign(payload),
       status: 'success',
       ..._user,
-      profileImg: 'http://placeimg.com/640/480/any',
-      phone: '010-5629-1265', // TODO: 더미 데이터 나중에 SQL로 바꿀거임.
+    };
+  }
+
+  async adminLogin(admin: CreateAdminDto) {
+    const { password, ..._admin } = admin;
+    const payload = {
+      email: _admin.email,
+      isAdmin: true,
+    };
+    return {
+      access_token: this.jwtService.sign(payload),
+      status: 'success',
+      ..._admin,
     };
   }
 }

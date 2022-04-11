@@ -19,6 +19,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     if (err || !user) {
       throw err || new UnauthorizedException({ msg: 'Login Required.' });
     }
+    if (user?.isAdmin === true) {
+      throw err || new UnauthorizedException({ msg: 'this account is admin' });
+    }
     return user;
   }
 }
@@ -33,8 +36,11 @@ export class JwtAuthGuardForAdmin extends AuthGuard('jwt') {
 
   handleRequest(err, user, info) {
     // You can throw an exception based on either "info" or "err" arguments
-    if (!user.isAdmin || err || !user) {
+    if (err || !user) {
       throw err || new UnauthorizedException({ msg: 'Login Required.' });
+    }
+    if (user?.isAdmin === undefined) {
+      throw err || new UnauthorizedException({ msg: 'Not Admin.' });
     }
     return user;
   }

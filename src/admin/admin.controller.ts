@@ -3,20 +3,23 @@ import { JwtAuthGuard, JwtAuthGuardForAdmin } from 'src/auth/jwt-auth.guard';
 import { CaverService } from 'src/caver/caver.service';
 import { UserService } from 'src/user/user.service';
 import { MintDto } from './dto/admin.dto';
-import jwt from 'jsonwebtoken';
-import moment from 'moment';
+
 import { ApiOperation } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
-import { CreateApproveDto } from 'src/user/dto/create-approve.dto';
+import { CreateApproveDto, CreateApproveDtoWithAddress } from "src/user/dto/create-approve.dto";
+import { InjectRepository } from '@nestjs/typeorm';
+import { Admin } from './admin.entity';
+import { Repository } from 'typeorm';
 
-interface IUser {
+interface IAdminJwt {
   email: string;
-  nickname: string;
 }
 
 @Controller('admin')
 export class AdminController {
   constructor(
+    @InjectRepository(Admin)
+    private userRepository: Repository<Admin>,
     private readonly userService: UserService,
     private readonly adminService: AdminService,
     private readonly caverService: CaverService,
@@ -27,16 +30,14 @@ export class AdminController {
   })
   @UseGuards(JwtAuthGuardForAdmin)
   @Post('/mint')
-  async _mint(@Req() { user }: { user: IUser }, @Body() mint: MintDto) {
-    const { password, location } = await this.userService.findOneByEmail(
+  async _mint(@Req() { user }: { user: IAdminJwt }, @Body() mint: MintDto) {
+    const { identityName, address, privateKey } = await this.adminService.findOneByEmail(
       user.email,
     );
-    const { address } = await this.userService.findWallet(user.email);
-
     const _mintNFT = await this.adminService.mint(
       mint.target,
       address,
-      location,
+      identityName,
       mint.day,
       'ENFT',
     );
@@ -48,8 +49,8 @@ export class AdminController {
   })
   @UseGuards(JwtAuthGuardForAdmin)
   @Get('/memberAddress')
-  async _member(@Req() { user }: { user: IUser }) {
-    const { address } = await this.userService.findWallet(user.email);
+  async _member(@Req() { user }: { user: IAdminJwt }) {
+    const { address } = await this.adminService.findOneByEmail(user.email);
     const owner = await this.caverService.contract.methods
       .ownerByMember()
       .call({
@@ -63,10 +64,10 @@ export class AdminController {
   })
   @UseGuards(JwtAuthGuardForAdmin)
   @Get('/approve/list')
-  async approveList(@Req() { user }: { user: IUser }) {
-    const { location } = await this.userService.findOneByEmail(user.email);
+  async approveList(@Req() { user }: { user: IAdminJwt }) {
+    const { identityName } = await this.adminService.findOneByEmail(user.email);
     const list = await this.userService.findApprove({
-      requestLocation: location,
+      requestIdentityName: identityName,
     });
     return list;
   }
@@ -77,19 +78,17 @@ export class AdminController {
   @UseGuards(JwtAuthGuardForAdmin)
   @Post('/approve/complete')
   async approveComplete(
-    @Req() { user }: { user: IUser },
-    @Body() approve: CreateApproveDto,
+    @Req() { user }: { user: IAdminJwt },
+    @Body() approve: CreateApproveDtoWithAddress,
   ) {
-    const { password, location } = await this.userService.findOneByEmail(
-      user.email,
-    );
-    const { address } = await this.userService.findWallet(user.email);
+    const { identityName, address } =
+      await this.adminService.findOneByEmail(user.email);
     const _mintNFT = await this.adminService.mint(
       approve.address,
       address,
-      location,
+      identityName,
       approve.requestDay,
-      password,
+      'ENFT',
     );
     await this.userService.approveComplete(approve);
     return _mintNFT;
