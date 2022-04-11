@@ -38,7 +38,7 @@ export class AdminController {
       address,
       location,
       mint.day,
-      password,
+      'ENFT',
     );
     return _mintNFT;
   }

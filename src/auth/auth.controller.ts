@@ -6,7 +6,7 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 import { CaverService } from 'src/caver/caver.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AdminService } from 'src/admin/admin.service';
 
 @Controller('auth')
