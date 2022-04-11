@@ -1,11 +1,11 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { UserLocalAuthGuard, AdminLocalAuthGuard } from './local-auth.guard';
 import { CaverService } from 'src/caver/caver.service';
-import { CreateUserDto, UserAddressDto } from "src/user/dto/create-user.dto";
+import { CreateUserDto, UserAddressDto } from 'src/user/dto/create-user.dto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AdminService } from 'src/admin/admin.service';
 import { CreateAdminDto } from '../admin/dto/create-admin.dto';
@@ -62,12 +62,12 @@ export class AuthController {
     return _user;
   }
 
-  @Post('/user/alreadyAccount')
+  @Get('/user/alreadyAccount')
   @ApiOperation({
     summary: '클립 연동 시 이미 계정이 있다면 기존 privateKey 반환',
   })
   @ApiBody({ type: CreateUserDto })
-  async alreadyAccount(@Body() user: UserAddressDto) {
+  async alreadyAccount(@Query() user: UserAddressDto) {
     const _user = await this.userSevice.alreadyAccount(user.address);
     return _user;
   }
