@@ -1,11 +1,17 @@
-import { ForbiddenException, forwardRef, HttpStatus, Inject, Injectable } from "@nestjs/common";
+import {
+  ForbiddenException,
+  forwardRef,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindConditions, FindManyOptions, Repository } from 'typeorm';
 import { CreateUserDto, UserNicknameDto } from './dto/create-user.dto';
 import { Approve, User } from './user.entity';
 import { CaverService } from 'src/caver/caver.service';
 import { CreateApproveDtoWithAddress } from './dto/create-approve.dto';
-import { Admin } from "../admin/admin.entity";
+import { Admin } from '../admin/admin.entity';
 
 @Injectable()
 export class UserService {
@@ -88,17 +94,21 @@ export class UserService {
     await this.approveRepository.delete(createApproveDto);
   }
 
-  async createAccount(createUserDto: CreateUserDto) {
-    const isExistByEmail = await this.userRepository.findOne({
-      address: createUserDto.address,
+  async alreadyAccount(address: string) {
+    const account = await this.userRepository.findOne({
+      address,
     });
-    if (isExistByEmail) {
-      throw new ForbiddenException({
-        statusCode: HttpStatus.FORBIDDEN,
-        message: '이미 등록된 사용자입니다.',
-        error: 'Forbidden',
-      });
+    if (account) {
+      return {
+        privateKey: account.privateKey,
+      };
     }
+    return {
+      privateKey: '',
+    };
+  }
+
+  async createAccount(createUserDto: CreateUserDto) {
     const isExistByNickname = await this.userRepository.findOne({
       nickname: createUserDto.nickname,
     });
