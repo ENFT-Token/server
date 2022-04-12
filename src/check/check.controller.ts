@@ -2,6 +2,8 @@ import { Body, Controller, Get, Post, Query, Req, UseGuards } from "@nestjs/comm
 import { ApiOperation } from '@nestjs/swagger';
 import { CheckDto, PlaceDto } from './dto/check.dto';
 import { CheckService } from './check.service';
+import { JwtAuthGuardForAdmin } from "../auth/jwt-auth.guard";
+import { IAdminJwt } from "../admin/admin.controller";
 
 
 @Controller('check')
@@ -11,10 +13,11 @@ export class CheckController {
   @ApiOperation({
     summary: '체크인/아웃',
   })
+  @UseGuards(JwtAuthGuardForAdmin)
   @Post('/')
-  async check(@Body() checkDto: CheckDto) {
+  async check(@Req() { user }: { user: IAdminJwt },@Body() checkDto: CheckDto) {
     const { address, nftToken } = checkDto;
-    return this.checkService.check(address, nftToken);
+    return this.checkService.check(user.email, address, nftToken);
   }
 
   @Get('/count')

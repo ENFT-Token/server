@@ -42,15 +42,17 @@ export class CheckService {
     await this.adminRepository.save(admin);
   }
 
-  async check(address: string, nftToken: string) {
+  async check(adminEmail: string, address: string, nftToken: string) {
     try {
-      const { place } = jwt.decode(nftToken) as { place: string };
       const admin = await this.adminRepository.findOne({
         relations: ['user'],
         where: {
-          place,
+          email: adminEmail,
         },
       });
+      if (!admin) {
+        throw new UnauthorizedException('Invalid NFT Token: 이용권의 위치와 사용하려는 위치가 일치하지 않습니다.');
+      }
       const result = jwt.verify(nftToken, admin.privateKey); // NFT 검증
 
       if (!this.isCheckIn(admin.user, address)) {

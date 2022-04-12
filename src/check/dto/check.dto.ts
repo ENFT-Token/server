@@ -15,7 +15,6 @@ export class CheckDto {
   nftToken: string;
 }
 
-
 export class PlaceDto {
   @IsString()
   place: string;

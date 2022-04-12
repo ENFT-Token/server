@@ -11,7 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Admin } from './admin.entity';
 import { Repository } from 'typeorm';
 
-interface IAdminJwt {
+export interface IAdminJwt {
   email: string;
 }
 
