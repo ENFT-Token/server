@@ -3,11 +3,13 @@ import { Board } from 'src/community/board/board.entity';
 import {
   Column,
   CreateDateColumn,
-  Entity,
+  Entity, JoinTable, ManyToMany,
   OneToMany,
   PrimaryColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from "typeorm";
+import { Admin } from "../admin/admin.entity";
 
 @Entity()
 export class User {
@@ -48,7 +50,11 @@ export class User {
 
 @Entity()
 export class Approve {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
+  @ApiProperty()
+  id: number;
+
+  @Column()
   @ApiProperty()
   address: string;
 
@@ -58,5 +64,5 @@ export class Approve {
 
   @Column()
   @ApiProperty()
-  requestIdentityName: string;
+  requestPlace: string;
 }

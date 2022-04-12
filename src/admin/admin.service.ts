@@ -55,13 +55,13 @@ export class AdminService {
   async mint(
     targetAddress: string,
     myAddress: string,
-    identityName: string,
+    place: string,
     day: number,
     secretKey: string,
   ) {
     const token = jwt.sign(
       {
-        place: identityName,
+        place: place,
         start_date: moment().format('YYYY-MM-DD'),
         end_date: moment().add(day, 'days').format('YYYY-MM-DD'),
       },
@@ -84,4 +84,6 @@ export class AdminService {
       });
     return _mintNFT;
   }
+
+
 }

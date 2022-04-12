@@ -31,12 +31,12 @@ export class AdminController {
   @UseGuards(JwtAuthGuardForAdmin)
   @Post('/mint')
   async _mint(@Req() { user }: { user: IAdminJwt }, @Body() mint: MintDto) {
-    const { identityName, address, privateKey } =
+    const { place, address, privateKey } =
       await this.adminService.findOneByEmail(user.email);
     const _mintNFT = await this.adminService.mint(
       mint.target,
       address,
-      identityName,
+      place,
       mint.day,
       privateKey,
     );
@@ -64,9 +64,9 @@ export class AdminController {
   @UseGuards(JwtAuthGuardForAdmin)
   @Get('/approve/list')
   async approveList(@Req() { user }: { user: IAdminJwt }) {
-    const { identityName } = await this.adminService.findOneByEmail(user.email);
+    const { place } = await this.adminService.findOneByEmail(user.email);
     const list = await this.userService.findApprove({
-      requestIdentityName: identityName,
+      requestPlace: place,
     });
     return list;
   }
@@ -80,13 +80,13 @@ export class AdminController {
     @Req() { user }: { user: IAdminJwt },
     @Body() approve: CreateApproveDtoWithAddress,
   ) {
-    const { identityName, address, privateKey } = await this.adminService.findOneByEmail(
+    const { place, address, privateKey } = await this.adminService.findOneByEmail(
       user.email,
     );
     const _mintNFT = await this.adminService.mint(
       approve.address,
       address,
-      identityName,
+      place,
       approve.requestDay,
       privateKey,
     );

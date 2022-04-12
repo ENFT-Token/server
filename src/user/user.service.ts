@@ -32,7 +32,7 @@ export class UserService {
 
   findApprove(approve: {
     address?: string;
-    requestIdentityName?: string;
+    requestPlace?: string;
     requestDay?: number;
   }): Promise<Approve[]> {
     return this.approveRepository.find(approve);
@@ -57,10 +57,10 @@ export class UserService {
   }
 
   async requestApprove(createApproveDto: CreateApproveDtoWithAddress) {
-    const isIdentityName = await this.adminRepository.findOne({
-      identityName: createApproveDto.requestIdentityName,
+    const isPlace = await this.adminRepository.findOne({
+      place: createApproveDto.requestPlace,
     });
-    if (!isIdentityName)
+    if (!isPlace)
       throw new ForbiddenException({
         statusCode: HttpStatus.FORBIDDEN,
         message: '지원하지 않는 장소입니다.',
@@ -70,9 +70,7 @@ export class UserService {
       address: createApproveDto.address,
     });
     for (const approve of approveList) {
-      if (
-        approve.requestIdentityName === createApproveDto.requestIdentityName
-      ) {
+      if (approve.requestPlace === createApproveDto.requestPlace) {
         throw new ForbiddenException({
           statusCode: HttpStatus.FORBIDDEN,
           message: '이미 신청한 장소입니다.',
@@ -80,7 +78,7 @@ export class UserService {
         });
       }
     }
-    this.approveRepository.save(createApproveDto);
+    await this.approveRepository.save(createApproveDto);
   }
 
   async approveComplete(createApproveDto: CreateApproveDtoWithAddress) {

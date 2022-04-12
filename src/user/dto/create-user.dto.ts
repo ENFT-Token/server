@@ -23,7 +23,6 @@ export class CreateUserDto {
   sex: string;
 }
 
-
 export class CreateUserDtoWithPrivateKey {
   @IsString()
   @ApiProperty()
@@ -50,7 +49,6 @@ export class CreateUserDtoWithPrivateKey {
   sex: string;
 }
 
-
 export class UserNicknameDto {
   @IsString()
   @ApiProperty()
@@ -62,4 +60,3 @@ export class UserAddressDto {
   @ApiProperty()
   address: string;
 }
-

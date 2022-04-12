@@ -8,7 +8,7 @@ export class CreateApproveDtoWithAddress {
 
   @IsString()
   @ApiProperty()
-  requestIdentityName: string;
+  requestPlace: string;
 
   @IsNumber()
   @ApiProperty()
@@ -19,7 +19,7 @@ export class CreateApproveDtoWithAddress {
 export class CreateApproveDto {
   @IsString()
   @ApiProperty()
-  requestIdentityName: string;
+  requestPlace: string;
 
   @IsNumber()
   @ApiProperty()
