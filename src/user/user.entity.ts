@@ -3,13 +3,12 @@ import { Board } from 'src/community/board/board.entity';
 import {
   Column,
   CreateDateColumn,
-  Entity, JoinTable, ManyToMany,
+  Entity,
   OneToMany,
   PrimaryColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn
-} from "typeorm";
-import { Admin } from "../admin/admin.entity";
+} from 'typeorm';
 
 @Entity()
 export class User {
@@ -29,7 +28,7 @@ export class User {
   @ApiProperty()
   location: string;
 
-  @Column()
+  @Column({ type: 'blob' })
   @ApiProperty()
   profile: string;
 

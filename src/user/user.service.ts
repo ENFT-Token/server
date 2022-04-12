@@ -6,12 +6,13 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindConditions, FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { CreateUserDto, UserNicknameDto } from './dto/create-user.dto';
 import { Approve, User } from './user.entity';
 import { CaverService } from 'src/caver/caver.service';
 import { CreateApproveDtoWithAddress } from './dto/create-approve.dto';
 import { Admin } from '../admin/admin.entity';
+
 
 @Injectable()
 export class UserService {
@@ -113,6 +114,7 @@ export class UserService {
     const privateKey = this.caverService.caver.wallet.keyring.generateSingleKey(
       createUserDto.address,
     );
+    const { profile, ..._user } = createUserDto;
     await this.userRepository.save({
       ...createUserDto,
       privateKey,

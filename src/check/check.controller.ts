@@ -1,8 +1,9 @@
 import { Body, Controller, Get, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { ApiOperation } from '@nestjs/swagger';
-import { CheckDto, PlaceDto } from "./dto/check.dto";
+import { CheckDto, PlaceDto } from './dto/check.dto';
 import { CheckService } from './check.service';
-import { JwtAuthGuardForAdmin } from "../auth/jwt-auth.guard";
+
+
 @Controller('check')
 export class CheckController {
   constructor(private checkService: CheckService) {}

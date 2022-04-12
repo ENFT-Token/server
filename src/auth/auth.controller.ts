@@ -22,7 +22,6 @@ export class AuthController {
   @UseGuards(AdminLocalAuthGuard)
   @Post('/admin/login')
   @ApiOperation({ summary: '로그인 API' })
-  @ApiBody({ type: CreateAdminDto })
   adminLogin(@Req() req) {
     console.log('/admin/login', req.user);
     return this.authService.adminLogin(req.user);
