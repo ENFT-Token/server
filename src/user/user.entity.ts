@@ -1,63 +1,45 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional } from 'class-validator';
 import { Board } from 'src/community/board/board.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   OneToMany,
-  OneToOne,
   PrimaryColumn,
-  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class Wallet {
+export class User {
   @PrimaryColumn()
-  @ApiProperty()
-  email: string;
-
-  @Column({ unique: true })
   @ApiProperty()
   address: string | null;
 
-  @Column({ unique: true })
-  @ApiProperty()
-  privateKey: string | null;
-}
-
-@Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @PrimaryColumn()
-  @ApiProperty()
-  nickname: string;
-
-  @PrimaryColumn()
-  @ApiProperty()
-  email: string;
-
   @Column()
   @ApiProperty()
-  password: string;
+  privateKey: string | null;
+
+  @Column({ unique: true })
+  @ApiProperty()
+  nickname: string;
 
   @Column()
   @ApiProperty()
   location: string;
+
+  @Column()
+  @ApiProperty()
+  profile: string;
+
+  @Column()
+  @ApiProperty()
+  sex: string;
 
   @CreateDateColumn()
   createAt: Date;
 
   @UpdateDateColumn()
   updateAt: Date;
-
-  @Column()
-  @ApiProperty()
-  isAdmin: boolean;
 
   @OneToMany((type) => Board, (board) => board.writer)
   @ApiProperty()
@@ -68,10 +50,6 @@ export class User {
 export class Approve {
   @PrimaryColumn()
   @ApiProperty()
-  email: string;
-
-  @Column()
-  @ApiProperty()
   address: string;
 
   @Column()
@@ -80,5 +58,5 @@ export class Approve {
 
   @Column()
   @ApiProperty()
-  requestLocation: string;
+  requestIdentityName: string;
 }

@@ -5,7 +5,8 @@ import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { UserModule } from 'src/user/user.module';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
-import { LocalStrategy } from './local.strategy';
+import { LocalStrategy as AdminLocalStrategy } from './admin.strategy';
+import { LocalStrategy as UserLocalStrategy } from './user.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CaverModule } from 'src/caver/caver.module';
 import { AdminModule } from 'src/admin/admin.module';
@@ -31,7 +32,7 @@ import { AdminModule } from 'src/admin/admin.module';
     AdminModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, UserLocalStrategy, AdminLocalStrategy, JwtStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

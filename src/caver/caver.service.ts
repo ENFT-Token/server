@@ -1,12 +1,12 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import * as fs from 'fs';
 import Caver, { AbiItem, Contract, Keyring, Keystore } from 'caver-js';
 import { ConfigService } from '@nestjs/config';
 import ABI from './contract.abi.json';
-import { UserService } from 'src/user/user.service';
-import { Repository } from 'typeorm';
-import { Wallet } from 'src/user/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '../user/user.entity';
+import { Repository } from 'typeorm';
+import { Admin } from '../admin/admin.entity';
 
 @Injectable()
 export class CaverService implements OnModuleInit {
@@ -15,13 +15,21 @@ export class CaverService implements OnModuleInit {
   feeKeyring: Keyring;
 
   constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+    @InjectRepository(Admin)
+    private adminRepository: Repository<Admin>,
     private configService: ConfigService,
-    @InjectRepository(Wallet)
-    private walletRepository: Repository<Wallet>,
   ) {}
 
-  allWallet() {
-    return this.walletRepository.find();
+  async allWallet() {
+    const allAdmin = await this.adminRepository.find({
+      select: ['address', 'privateKey'],
+    });
+    const allUser = await this.userRepository.find({
+      select: ['address', 'privateKey'],
+    });
+    return [...allAdmin, ...allUser];
   }
 
   async onModuleInit() {
@@ -40,6 +48,7 @@ export class CaverService implements OnModuleInit {
 
     // 사용자 지갑도 키링에 추가
     const _wallet = await this.allWallet();
+    console.log('all wallet', _wallet);
     _wallet.forEach((wallet) => {
       const keyring = new this.caver.wallet.keyring.singleKeyring(
         wallet.address,

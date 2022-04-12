@@ -2,7 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 
 export class MintDto {
-  @ApiProperty()
+  @ApiProperty({
+    description: '발급할 지갑 주소',
+  })
   @IsString()
   target: string;
 

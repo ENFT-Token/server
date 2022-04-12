@@ -4,7 +4,7 @@ import { IsBoolean, IsOptional, IsString } from 'class-validator';
 export class CreateUserDto {
   @IsString()
   @ApiProperty()
-  email: string;
+  address: string;
 
   @IsString()
   @ApiProperty()
@@ -12,16 +12,44 @@ export class CreateUserDto {
 
   @IsString()
   @ApiProperty()
-  password: string;
+  location: string;
+
+  @IsString()
+  @ApiProperty()
+  profile: string;
+
+  @IsString()
+  @ApiProperty()
+  sex: string;
+}
+
+
+export class CreateUserDtoWithPrivateKey {
+  @IsString()
+  @ApiProperty()
+  address: string;
+
+  @IsString()
+  @ApiProperty()
+  privateKey: string;
+
+  @IsString()
+  @ApiProperty()
+  nickname: string;
 
   @IsString()
   @ApiProperty()
   location: string;
 
-  @IsBoolean()
+  @IsString()
   @ApiProperty()
-  isAdmin: boolean;
+  profile: string;
+
+  @IsString()
+  @ApiProperty()
+  sex: string;
 }
+
 
 export class UserNicknameDto {
   @IsString()
@@ -29,8 +57,9 @@ export class UserNicknameDto {
   nickname: string;
 }
 
-export class UserEmailDto {
+export class UserAddressDto {
   @IsString()
   @ApiProperty()
-  email: string;
+  address: string;
 }
+

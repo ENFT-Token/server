@@ -1,18 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 
-export class CreateApproveDto {
-  @IsString()
-  @ApiProperty()
-  email: string;
-
+export class CreateApproveDtoWithAddress {
   @IsString()
   @ApiProperty()
   address: string;
 
   @IsString()
   @ApiProperty()
-  requestLocation: string;
+  requestIdentityName: string;
+
+  @IsNumber()
+  @ApiProperty()
+  requestDay: number;
+}
+
+
+export class CreateApproveDto {
+  @IsString()
+  @ApiProperty()
+  requestIdentityName: string;
 
   @IsNumber()
   @ApiProperty()
