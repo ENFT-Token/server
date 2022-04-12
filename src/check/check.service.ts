@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user/user.entity';
 import { Repository } from 'typeorm';
@@ -13,6 +13,16 @@ export class CheckService {
     @InjectRepository(Admin)
     private adminRepository: Repository<Admin>,
   ) {}
+
+  async count(place: string) {
+    const admin = await this.adminRepository.findOne({
+      relations: ['user'],
+      where: {
+        place,
+      },
+    });
+    return admin?.user?.length ?? 0;
+  }
 
   isCheckIn(checkUser: User[], address: string) {
     const idx = checkUser.findIndex((user) => user.address === address);

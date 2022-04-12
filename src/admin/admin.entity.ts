@@ -41,5 +41,6 @@ export class Admin {
       referencedColumnName: 'place',
     },
   })
+  @ApiProperty({ description: '체크인/체크아웃 유저' })
   user: User[];
 }
