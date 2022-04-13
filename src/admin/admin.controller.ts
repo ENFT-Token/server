@@ -66,7 +66,10 @@ export class AdminController {
   async approveList(@Req() { user }: { user: IAdminJwt }) {
     const { place } = await this.adminService.findOneByEmail(user.email);
     const list = await this.userService.findApprove({
-      requestPlace: place,
+      where: {
+        requestPlace: place
+      },
+      select: ['requestPlace', 'requestDay', 'address'],
     });
     return list;
   }

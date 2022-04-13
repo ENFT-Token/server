@@ -31,12 +31,8 @@ export class UserService {
     return this.userRepository.findOne({ address });
   }
 
-  findApprove(approve: {
-    address?: string;
-    requestPlace?: string;
-    requestDay?: number;
-  }): Promise<Approve[]> {
-    return this.approveRepository.find(approve);
+  findApprove(options: FindManyOptions<Approve>): Promise<Approve[]> {
+    return this.approveRepository.find(options);
   }
 
   async findNickname(
