@@ -36,6 +36,19 @@ export class CaverService implements OnModuleInit {
     this.caver = new Caver(this.configService.get('KLAYTN_NETWORK_URL'));
     const keystore = fs.readFileSync('./keystore.json', 'utf8');
 
+    // const place = new PlaceCount();
+    // place.place = 'ENFT 헬스장';
+    // place.user = await this.userRepository.find({});
+    //
+    //
+    // await this.placeCountRepository.save(place);
+    //
+    // const A = await this.placeCountRepository.findOne({ relations: ['user'], where: {
+    //   place: 'ENFT 헬스장',
+    //   }});
+    // console.log(A);
+    // ----- Test
+
     // Decrypt keystore
     const keyring = this.caver.wallet.keyring.decrypt(
       keystore as any,

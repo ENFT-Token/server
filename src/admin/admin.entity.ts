@@ -1,5 +1,12 @@
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity, JoinTable, ManyToMany,
+  OneToMany,
+  PrimaryColumn,
+  PrimaryGeneratedColumn
+} from "typeorm";
 import { ApiProperty } from '@nestjs/swagger';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Admin {
@@ -15,15 +22,25 @@ export class Admin {
   @ApiProperty()
   location: string;
 
-  @Column()
-  @ApiProperty()
-  identityName: string;
+  @Column({ unique: true })
+  @ApiProperty({ description: '헬스장 상호명' })
+  place: string;
 
   @Column({ unique: true })
   @ApiProperty()
-  address: string | null;
+  address: string;
 
   @Column({ unique: true })
   @ApiProperty()
-  privateKey: string | null;
+  privateKey: string;
+
+  @ManyToMany((type) => User, (user) => user.address)
+  @JoinTable({
+    joinColumn: {
+      name: 'place',
+      referencedColumnName: 'place',
+    },
+  })
+  @ApiProperty({ description: '체크인/체크아웃 유저' })
+  user: User[];
 }

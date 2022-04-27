@@ -6,7 +6,8 @@ import {
   Entity,
   OneToMany,
   PrimaryColumn,
-  UpdateDateColumn,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
 } from 'typeorm';
 
 @Entity()
@@ -27,7 +28,7 @@ export class User {
   @ApiProperty()
   location: string;
 
-  @Column()
+  @Column({ type: 'blob' })
   @ApiProperty()
   profile: string;
 
@@ -48,7 +49,11 @@ export class User {
 
 @Entity()
 export class Approve {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
+  @ApiProperty()
+  id: number;
+
+  @Column()
   @ApiProperty()
   address: string;
 
@@ -58,5 +63,5 @@ export class Approve {
 
   @Column()
   @ApiProperty()
-  requestIdentityName: string;
+  requestPlace: string;
 }

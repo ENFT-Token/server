@@ -16,7 +16,7 @@ export class CreateAdminDto {
 
   @IsString()
   @ApiProperty()
-  identityName: string;
+  place: string;
 
   @IsString()
   @ApiProperty()

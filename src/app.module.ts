@@ -12,6 +12,7 @@ import { BoardModule } from './community/board/board.module';
 import { ImageModule } from './community/image/image.module';
 import { AdminModule } from './admin/admin.module';
 import { EventsModule } from './events/events.module';
+import { CheckModule } from './check/check.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { EventsModule } from './events/events.module';
     ImageModule,
     AdminModule,
     EventsModule,
+    CheckModule,
   ],
   controllers: [AppController],
   providers: [AppService],

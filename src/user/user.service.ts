@@ -6,12 +6,13 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindConditions, FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { CreateUserDto, UserNicknameDto } from './dto/create-user.dto';
 import { Approve, User } from './user.entity';
 import { CaverService } from 'src/caver/caver.service';
 import { CreateApproveDtoWithAddress } from './dto/create-approve.dto';
 import { Admin } from '../admin/admin.entity';
+
 
 @Injectable()
 export class UserService {
@@ -30,12 +31,8 @@ export class UserService {
     return this.userRepository.findOne({ address });
   }
 
-  findApprove(approve: {
-    address?: string;
-    requestIdentityName?: string;
-    requestDay?: number;
-  }): Promise<Approve[]> {
-    return this.approveRepository.find(approve);
+  findApprove(options: FindManyOptions<Approve>): Promise<Approve[]> {
+    return this.approveRepository.find(options);
   }
 
   async findNickname(
@@ -57,10 +54,10 @@ export class UserService {
   }
 
   async requestApprove(createApproveDto: CreateApproveDtoWithAddress) {
-    const isIdentityName = await this.adminRepository.findOne({
-      identityName: createApproveDto.requestIdentityName,
+    const isPlace = await this.adminRepository.findOne({
+      place: createApproveDto.requestPlace,
     });
-    if (!isIdentityName)
+    if (!isPlace)
       throw new ForbiddenException({
         statusCode: HttpStatus.FORBIDDEN,
         message: '지원하지 않는 장소입니다.',
@@ -70,9 +67,7 @@ export class UserService {
       address: createApproveDto.address,
     });
     for (const approve of approveList) {
-      if (
-        approve.requestIdentityName === createApproveDto.requestIdentityName
-      ) {
+      if (approve.requestPlace === createApproveDto.requestPlace) {
         throw new ForbiddenException({
           statusCode: HttpStatus.FORBIDDEN,
           message: '이미 신청한 장소입니다.',
@@ -80,7 +75,7 @@ export class UserService {
         });
       }
     }
-    this.approveRepository.save(createApproveDto);
+    await this.approveRepository.save(createApproveDto);
   }
 
   async approveComplete(createApproveDto: CreateApproveDtoWithAddress) {
@@ -115,6 +110,7 @@ export class UserService {
     const privateKey = this.caverService.caver.wallet.keyring.generateSingleKey(
       createUserDto.address,
     );
+    const { profile, ..._user } = createUserDto;
     await this.userRepository.save({
       ...createUserDto,
       privateKey,
