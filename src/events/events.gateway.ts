@@ -9,8 +9,8 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-// import { Repository } from 'typeorm';
-// import { Chat } from './chat/chat.entity';
+import { Repository } from 'typeorm';
+import { Chat } from './chat/chat.entity';
 
 interface MsgReq {
   roomId: string;
@@ -77,10 +77,17 @@ export class EventsGateway
   @SubscribeMessage('textMessage')
   onTextMessage(client: Socket, data: MsgReq) {
     const { msg, roomId, userName } = data;
+    const date = new Date();
+    var date_string = "";
+    date_string += date.toLocaleDateString() + " " + date.getHours().toLocaleString() 
+    + ":" + date.getMinutes().toLocaleString() + ":" + date.getSeconds().toLocaleString();
+    date_string = date_string.replace(". ", "/");
+    date_string = date_string.replace(". ", "/");
+    date_string = date_string.replace(".", "");
     const res : MsgRes = {
       msg: msg,
       userName: userName,
-      sendAt: new Date().toLocaleString(),
+      sendAt: date_string,
       roomId: roomId,
     }
     console.log(res)
