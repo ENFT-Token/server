@@ -9,8 +9,8 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Repository } from 'typeorm';
-import { Chat } from './chat/chat.entity';
+// import { Repository } from 'typeorm';
+// import { Chat } from './chat/chat.entity';
 
 interface MsgReq {
   roomId: string;
