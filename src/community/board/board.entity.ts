@@ -5,9 +5,11 @@ import {
   DeleteDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Image } from './image.entity';
 
 @Entity()
 export class Board {
@@ -37,4 +39,7 @@ export class Board {
 
   @ManyToOne((type) => User, (writer) => writer.board, { eager: true })
   writer: User;
+
+  @OneToMany((type) => Image, (image) => image.board, { eager: true })
+  image: Image;
 }

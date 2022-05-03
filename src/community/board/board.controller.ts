@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Req,
   UseGuards,
@@ -37,5 +38,10 @@ export class BoardController {
   @Get()
   async getAllBoard(): Promise<Board[]> {
     return await this.boardService.getAllBoard();
+  }
+
+  @Get('/:id')
+  async getOneBoard(@Param('id') id: number): Promise<Board> {
+    return await this.boardService.getOneBoard(id);
   }
 }
