@@ -1,10 +1,12 @@
 import {
   Column,
-  Entity, JoinTable, ManyToMany,
+  Entity,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryColumn,
-  PrimaryGeneratedColumn
-} from "typeorm";
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../user/user.entity';
 
@@ -29,6 +31,14 @@ export class Admin {
   @Column({ unique: true })
   @ApiProperty()
   address: string;
+
+  @Column({ unique: true })
+  @ApiProperty()
+  phone: string;
+
+  @Column({ unique: true })
+  @ApiProperty()
+  nickname: string;
 
   @Column({ unique: true })
   @ApiProperty()

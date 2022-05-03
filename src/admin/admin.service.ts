@@ -1,4 +1,10 @@
-import { ForbiddenException, forwardRef, HttpStatus, Inject, Injectable } from "@nestjs/common";
+import {
+  ForbiddenException,
+  forwardRef,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import { CaverService } from 'src/caver/caver.service';
@@ -84,6 +90,4 @@ export class AdminService {
       });
     return _mintNFT;
   }
-
-
 }
