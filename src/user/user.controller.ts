@@ -27,7 +27,6 @@ export class UserController {
     private readonly caverService: CaverService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get('/nickname')
   @ApiOperation({ summary: 'nickname 중복체크 API' })
   @ApiBody({ type: UserNicknameDto })
