@@ -14,8 +14,10 @@ export class EventsService {
     ){};
 
     async getAllChat(roomId: string){
-        const chatRoom = this.chatRoomRepository.findOne({roomId});
-        return chatRoom;
-
+        const roomIds = roomId.split(" ", 2);
+        const chatRoom1 = this.chatRoomRepository.findOne({roomId: roomIds[0] + " " + roomIds[1]});
+        const chatRoom2 = this.chatRoomRepository.findOne({roomId: roomIds[1] + " " + roomIds[0]});
+        if(chatRoom1) return chatRoom1;
+        if(chatRoom2) return chatRoom2;
     }
 }

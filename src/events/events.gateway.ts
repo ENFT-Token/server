@@ -66,13 +66,25 @@ export class EventsGateway
     client.join(roomId);
   }
   async roomSave(roomId: string){
-    const isExit = await this.chatRoomRepository.findOne({roomId});
-    if(!isExit){
+    const users = roomId.split(" ", 2);
+    const roomId1 = users[0] + " " + users[1];
+    const roomId2 = users[1] + " " + users[0];
+    const isExist1 = await this.chatRoomRepository.findOne({roomId: roomId1});
+    const isExist2 = await this.chatRoomRepository.findOne({roomId: roomId2});
+    var realRoomId: string;
+    if(!isExist1){
+      if(!isExist2){
+        realRoomId = roomId;
+      }else realRoomId = roomId2;
+    }else realRoomId = roomId1;
+    if(!isExist1 && !isExist2){
       const new_room = this.chatRoomRepository.create({
         roomId,
       })
       this.chatRoomRepository.save(new_room);
     }
+    return realRoomId;
+    
   }
 
   @SubscribeMessage('join')
@@ -111,7 +123,8 @@ export class EventsGateway
 
   async msgSave(data: MsgReq, date: Date){
     const { msg, roomId, userName } = data;
-    const chatRoom = await this.chatRoomRepository.findOne({roomId});
+    const chatRoomId = await this.roomSave(roomId);
+    const chatRoom = await this.chatRoomRepository.findOne({roomId: chatRoomId});
     const new_chat = this.chatRepository.create({
       msg: msg,
       sendAt: date,
@@ -124,6 +137,7 @@ export class EventsGateway
   @SubscribeMessage('imageMessage')
   onImageMessage(client: Socket, data: MsgReq) {
     const { msg, roomId, userName } = data;
+    
     const res : MsgRes = {
       msg: msg,
       userName: userName,
