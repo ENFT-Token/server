@@ -66,7 +66,7 @@ export class EventsGateway
     client.join(roomId);
   }
   async roomSave(roomId: string){
-    const isExit = await this.chatRoomRepository.findOne(roomId);
+    const isExit = await this.chatRoomRepository.findOne({roomId});
     if(!isExit){
       const new_room = this.chatRoomRepository.create({
         roomId,
@@ -111,7 +111,7 @@ export class EventsGateway
 
   async msgSave(data: MsgReq, date: Date){
     const { msg, roomId, userName } = data;
-    const chatRoom = await this.chatRoomRepository.findOne(roomId);
+    const chatRoom = await this.chatRoomRepository.findOne({roomId});
     const new_chat = this.chatRepository.create({
       msg: msg,
       sendAt: date,
