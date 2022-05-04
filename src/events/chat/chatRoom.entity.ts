@@ -7,7 +7,7 @@ export class ChatRoom{
     id: number;
 
     @Column()
-    roomName: String;
+    roomId: String;
 
     @OneToMany(
         (type) => Chat, (chat) => chat.roomId, { eager: true }

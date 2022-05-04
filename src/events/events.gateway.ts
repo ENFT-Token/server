@@ -85,6 +85,7 @@ export class EventsGateway
   onTextMessage(client: Socket, data: MsgReq) {
     const { msg, roomId, userName } = data;
     const date = new Date();
+    this.msgSave(data, date);
     var date_string = "";
     date_string += date.toLocaleDateString() + " " + date.getHours().toLocaleString() 
     + ":" + date.getMinutes().toLocaleString() + ":" + date.getSeconds().toLocaleString();
@@ -97,8 +98,20 @@ export class EventsGateway
       sendAt: date_string,
       roomId: roomId,
     }
+ 
     console.log(res)
     this.server.to(roomId).emit('textMessage', res);
+  }
+
+  async msgSave(data: MsgReq, date: Date){
+    const { msg, roomId, userName } = data;
+    const chatRoom = await this.chatRoomRepository.findOne(roomId);
+    this.chatRepository.create({
+      msg: msg,
+      sendAt: date,
+      senderName: userName,
+      roomId: chatRoom,
+    });
   }
 
   @SubscribeMessage('imageMessage')

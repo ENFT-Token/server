@@ -10,10 +10,10 @@ export class Chat{
     msg: string;
 
     @Column()
-    sendAt: string;
+    sendAt: Date;
 
     @Column()
-    senderName: string;
+    senderName: String;
 
     @ManyToOne((type) => ChatRoom, (chatroom) => chatroom.chat)
     roomId: ChatRoom;
