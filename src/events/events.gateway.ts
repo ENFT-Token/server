@@ -9,8 +9,9 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-// import { Repository } from 'typeorm';
-// import { Chat } from './chat/chat.entity';
+import { Repository } from 'typeorm';
+import { Chat } from './chat/chat.entity';
+import { ChatRoom } from './chat/chatRoom.entity';
 
 interface MsgReq {
   roomId: string;
@@ -36,10 +37,12 @@ interface MsgRes {
 export class EventsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  // constructor(
-  //   @InjectRepository(Chat)
-  //   private chatRepository: Repository<Chat>,
-  // ){}
+  constructor(
+    @InjectRepository(Chat)
+    private chatRepository: Repository<Chat>,
+    @InjectRepository(ChatRoom)
+    private chatRoomRepository: Repository<ChatRoom>,
+  ){}
   private logger: Logger = new Logger('ChatGateway');
   @WebSocketServer()
   server: Server;
@@ -58,6 +61,9 @@ export class EventsGateway
 
   @SubscribeMessage('createRoom')
   createChatRoom(client: Socket, roomId: string) {
+    this.chatRoomRepository.create({
+      roomName: roomId
+    });
     console.log(roomId);
     client.join(roomId);
   }
@@ -71,6 +77,7 @@ export class EventsGateway
 
   @SubscribeMessage('leave')
   leaveChatRoom(client: Socket, roomId: string) {
+    
     client.leave(roomId);
   }
 
