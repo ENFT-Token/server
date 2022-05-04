@@ -13,7 +13,6 @@ import { CaverService } from 'src/caver/caver.service';
 import { CreateApproveDtoWithAddress } from './dto/create-approve.dto';
 import { Admin } from '../admin/admin.entity';
 
-
 @Injectable()
 export class UserService {
   constructor(
@@ -31,8 +30,21 @@ export class UserService {
     return this.userRepository.findOne({ address });
   }
 
-  findApprove(options: FindManyOptions<Approve>): Promise<Approve[]> {
-    return this.approveRepository.find(options);
+  findApprove(place: string): Promise<Approve[]> {
+    return this.approveRepository
+      .createQueryBuilder('approve')
+      .where('approve.requestPlace = :place', { place })
+      .leftJoinAndSelect(User, 'user', 'user.address = approve.address')
+      .select([
+        'approve.requestPlace',
+        'approve.requestDay',
+        'approve.address',
+        'user.nickname',
+        'user.location',
+        'user.sex',
+        'user.profile',
+      ])
+      .getMany();
   }
 
   async findNickname(

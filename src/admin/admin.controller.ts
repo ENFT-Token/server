@@ -6,7 +6,10 @@ import { MintDto } from './dto/admin.dto';
 
 import { ApiOperation } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
-import { CreateApproveDto, CreateApproveDtoWithAddress } from "src/user/dto/create-approve.dto";
+import {
+  CreateApproveDto,
+  CreateApproveDtoWithAddress,
+} from 'src/user/dto/create-approve.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Admin } from './admin.entity';
 import { Repository } from 'typeorm';
@@ -65,12 +68,7 @@ export class AdminController {
   @Get('/approve/list')
   async approveList(@Req() { user }: { user: IAdminJwt }) {
     const { place } = await this.adminService.findOneByEmail(user.email);
-    const list = await this.userService.findApprove({
-      where: {
-        requestPlace: place
-      },
-      select: ['requestPlace', 'requestDay', 'address'],
-    });
+    const list = await this.userService.findApprove(place);
     return list;
   }
 
@@ -83,9 +81,8 @@ export class AdminController {
     @Req() { user }: { user: IAdminJwt },
     @Body() approve: CreateApproveDtoWithAddress,
   ) {
-    const { place, address, privateKey } = await this.adminService.findOneByEmail(
-      user.email,
-    );
+    const { place, address, privateKey } =
+      await this.adminService.findOneByEmail(user.email);
     const _mintNFT = await this.adminService.mint(
       approve.address,
       address,
