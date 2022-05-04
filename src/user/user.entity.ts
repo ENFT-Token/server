@@ -7,7 +7,7 @@ import {
   OneToMany,
   PrimaryColumn,
   PrimaryGeneratedColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()

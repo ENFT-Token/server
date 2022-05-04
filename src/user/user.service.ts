@@ -29,12 +29,16 @@ export class UserService {
   async findOneByWallet(address: string): Promise<User> {
     return this.userRepository.findOne({ address });
   }
-
   findApprove(place: string): Promise<Approve[]> {
     return this.approveRepository
       .createQueryBuilder('approve')
       .where('approve.requestPlace = :place', { place })
-      .leftJoinAndSelect(User, 'user', 'user.address = approve.address')
+      .leftJoinAndMapOne(
+        'approve.user',
+        User,
+        'user',
+        'user.address = approve.address',
+      )
       .select([
         'approve.requestPlace',
         'approve.requestDay',
