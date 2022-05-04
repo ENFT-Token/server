@@ -67,6 +67,15 @@ export class EventsGateway
     console.log(roomId);
     client.join(roomId);
   }
+  async roomSave(roomId: string){
+    const isExit = await this.chatRoomRepository.findOne(roomId);
+    if(!isExit){
+      const new_room = this.chatRoomRepository.create({
+        roomId,
+      })
+      this.chatRoomRepository.save(new_room);
+    }
+  }
 
   @SubscribeMessage('join')
   enterChatRoom(client: Socket, roomId: string) {
@@ -105,12 +114,13 @@ export class EventsGateway
   async msgSave(data: MsgReq, date: Date){
     const { msg, roomId, userName } = data;
     const chatRoom = await this.chatRoomRepository.findOne(roomId);
-    this.chatRepository.create({
+    const new_chat = this.chatRepository.create({
       msg: msg,
       sendAt: date,
       senderName: userName,
       roomId: chatRoom,
     });
+    this.chatRepository.save(new_chat);
   }
 
   @SubscribeMessage('imageMessage')
