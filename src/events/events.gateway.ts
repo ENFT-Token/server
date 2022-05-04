@@ -62,7 +62,7 @@ export class EventsGateway
   @SubscribeMessage('createRoom')
   createChatRoom(client: Socket, roomId: string) {
     this.chatRoomRepository.create({
-      roomName: roomId
+      roomId
     });
     console.log(roomId);
     client.join(roomId);
@@ -98,7 +98,6 @@ export class EventsGateway
       sendAt: date_string,
       roomId: roomId,
     }
- 
     console.log(res)
     this.server.to(roomId).emit('textMessage', res);
   }
