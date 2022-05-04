@@ -61,9 +61,7 @@ export class EventsGateway
 
   @SubscribeMessage('createRoom')
   createChatRoom(client: Socket, roomId: string) {
-    this.chatRoomRepository.create({
-      roomId
-    });
+    this.roomSave(roomId);
     console.log(roomId);
     client.join(roomId);
   }
