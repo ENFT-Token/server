@@ -22,7 +22,7 @@ export class CreateAdminDto {
   @ApiProperty()
   nickname: string;
 
-  @IsPhoneNumber()
+  @IsString()
   @ApiProperty()
   phone: string;
 }
@@ -56,7 +56,7 @@ export class CreateAdminDtoWithAddress {
   @ApiProperty()
   privateKey: string;
 
-  @IsPhoneNumber()
+  @IsString()
   @ApiProperty()
   phone: string;
 }
