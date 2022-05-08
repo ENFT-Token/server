@@ -1,15 +1,14 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Board } from "./board.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Board } from './board.entity';
 
 @Entity('image')
-export class Image{
-    @PrimaryGeneratedColumn()
-    id: number;
+export class Image {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column("blob", { nullable: true })
-    file: Buffer;
+  @Column({ type: 'blob', nullable: true })
+  file: Buffer;
 
-    @ManyToOne((type) => Board, (board) => board.image, { eager: false })
-    board: Board;
-
+  @ManyToOne((type) => Board, (board) => board.image, { eager: false })
+  board: Board;
 }

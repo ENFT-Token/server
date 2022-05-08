@@ -13,7 +13,7 @@ export class CaverService implements OnModuleInit {
   caver: Caver;
   contract: Contract;
   feeKeyring: Keyring;
-
+  userKeyring: Record<string, Keyring>;
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -30,6 +30,19 @@ export class CaverService implements OnModuleInit {
       select: ['address', 'privateKey'],
     });
     return [...allAdmin, ...allUser];
+  }
+
+  getBalance(address: string) {
+    this.contract.methods.getBalance(address);
+  }
+
+  transfer(from: string, to: string, tokenId: string) {
+    return this.contract.methods.transferFrom(from, to, tokenId).send({
+      from: from,
+      gas: 3000000,
+      feeDelegation: true,
+      feePayer: this.feeKeyring.address,
+    });
   }
 
   async onModuleInit() {
@@ -67,6 +80,7 @@ export class CaverService implements OnModuleInit {
         wallet.address,
         wallet.privateKey,
       );
+      this.userKeyring[wallet.address] = keyring;
       this.caver.wallet.add(keyring);
     });
 

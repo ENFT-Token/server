@@ -4,7 +4,7 @@ import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDtoWithPrivateKey } from 'src/user/dto/create-user.dto';
 import { AdminService } from 'src/admin/admin.service';
-import { CreateAdminDto } from '../admin/dto/create-admin.dto';
+import { CreateAdminDtoWithAddress } from '../admin/dto/create-admin.dto';
 
 @Injectable()
 export class AuthService {
@@ -53,10 +53,11 @@ export class AuthService {
     };
   }
 
-  async adminLogin(admin: CreateAdminDto) {
-    const { password, ..._admin } = admin;
+  async adminLogin(admin: CreateAdminDtoWithAddress) {
+    const { password, privateKey, ..._admin } = admin;
     const payload = {
       email: _admin.email,
+      address: _admin.address,
       isAdmin: true,
     };
     return {

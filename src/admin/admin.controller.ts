@@ -16,6 +16,7 @@ import { Repository } from 'typeorm';
 
 export interface IAdminJwt {
   email: string;
+  address: string;
 }
 
 @Controller('admin')

@@ -1,10 +1,17 @@
-import { Body, Controller, Get, Post, Query, Req, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { CheckDto, PlaceDto } from './dto/check.dto';
 import { CheckService } from './check.service';
-import { JwtAuthGuardForAdmin } from "../auth/jwt-auth.guard";
-import { IAdminJwt } from "../admin/admin.controller";
-
+import { JwtAuthGuardForAdmin } from '../auth/jwt-auth.guard';
+import { IAdminJwt } from '../admin/admin.controller';
 
 @Controller('check')
 export class CheckController {
@@ -15,7 +22,10 @@ export class CheckController {
   })
   @UseGuards(JwtAuthGuardForAdmin)
   @Post('/')
-  async check(@Req() { user }: { user: IAdminJwt },@Body() checkDto: CheckDto) {
+  async check(
+    @Req() { user }: { user: IAdminJwt },
+    @Body() checkDto: CheckDto,
+  ) {
     const { address, nftToken } = checkDto;
     return this.checkService.check(user.email, address, nftToken);
   }
