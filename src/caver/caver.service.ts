@@ -72,17 +72,17 @@ export class CaverService implements OnModuleInit {
     // Add to caver.wallet
     this.caver.wallet.add(keyring);
 
-    // 사용자 지갑도 키링에 추가
-    const _wallet = await this.allWallet();
-    console.log('all wallet', _wallet);
-    _wallet.forEach((wallet) => {
-      const keyring = new this.caver.wallet.keyring.singleKeyring(
-        wallet.address,
-        wallet.privateKey,
-      );
-      this.userKeyring[wallet.address] = keyring;
-      this.caver.wallet.add(keyring);
-    });
+    // // 사용자 지갑도 키링에 추가
+    // const _wallet = await this.allWallet();
+    // console.log('all wallet', _wallet);
+    // _wallet.forEach((wallet) => {
+    //   const keyring = new this.caver.wallet.keyring.singleKeyring(
+    //     wallet.address,
+    //     wallet.privateKey,
+    //   );
+    //   this.userKeyring[wallet.address] = keyring;
+    //   this.caver.wallet.add(keyring);
+    // });
 
     this.contract = new this.caver.contract(
       ABI as AbiItem[],
