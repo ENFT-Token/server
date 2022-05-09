@@ -104,6 +104,7 @@ export class EventsGateway
   onTextMessage(client: Socket, data: MsgReq) {
     const { msg, roomId, userName } = data;
     const date = new Date();
+    this.msgSave(data, date);
     const res : MsgRes = {
       msg: msg,
       userName: userName,
