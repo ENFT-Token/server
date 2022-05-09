@@ -20,13 +20,23 @@ export class EventsService {
         const chatRoom2 = await this.chatRoomRepository.findOne({roomId: roomId2});
         if(chatRoom1) return chatRoom1;
         else if(chatRoom2) return chatRoom2;
-        else return {string: 'noting'};
+        else return {return_value: 'noting'};
     }
 
     async getChatRooms(user: string){
         const chatRooms = await this.chatRoomRepository
-        .createQueryBuilder("chat_room")
-        .where("chat_room.roomId like :roomId", { roomId:`%${user}%` })
+        .createQueryBuilder('chat_room')
+        .leftJoin(
+            qb =>
+                qb.from(Chat, 'chat')
+                    .select('max(sendAt)', 'sendAt')
+                    .addSelect('chat.roomId', 'roomId')
+                    .groupBy('chat.roomId'),
+            'last_chat',
+            'last_chat.roomId = chat_room.id'
+        )
+        .leftJoinAndSelect('chat_room.chat', 'chat', 'chat.roomId = chat_room.id AND chat.sendAt = last_chat.sendAt')
+        .orderBy("chat.sendAt", "DESC")
         .getMany();
         return chatRooms;
     }
