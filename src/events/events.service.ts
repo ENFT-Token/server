@@ -36,6 +36,7 @@ export class EventsService {
             'last_chat.roomId = chat_room.id'
         )
         .leftJoinAndSelect('chat_room.chat', 'chat', 'chat.roomId = chat_room.id AND chat.sendAt = last_chat.sendAt')
+        .where("chat_room.roomId like :roomId", { roomId:`%${user}%` })
         .orderBy("chat.sendAt", "DESC")
         .getMany();
         return chatRooms;
