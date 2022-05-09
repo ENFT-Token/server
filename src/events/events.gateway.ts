@@ -23,7 +23,7 @@ interface MsgRes {
   roomId: string;
   msg: string;
   userName: string;
-  sendAt: string;
+  sendAt: Date;
 }
 
 
@@ -104,17 +104,10 @@ export class EventsGateway
   onTextMessage(client: Socket, data: MsgReq) {
     const { msg, roomId, userName } = data;
     const date = new Date();
-    this.msgSave(data, date);
-    var date_string = "";
-    date_string += date.toLocaleDateString() + " " + date.getHours().toLocaleString() 
-    + ":" + date.getMinutes().toLocaleString() + ":" + date.getSeconds().toLocaleString();
-    date_string = date_string.replace(". ", "/");
-    date_string = date_string.replace(". ", "/");
-    date_string = date_string.replace(".", "");
     const res : MsgRes = {
       msg: msg,
       userName: userName,
-      sendAt: date_string,
+      sendAt: date,
       roomId: roomId,
     }
     console.log(res)
