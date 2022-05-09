@@ -22,15 +22,15 @@ export class CaverService implements OnModuleInit {
     private configService: ConfigService,
   ) {}
 
-  async allWallet() {
-    const allAdmin = await this.adminRepository.find({
-      select: ['address', 'privateKey'],
-    });
-    const allUser = await this.userRepository.find({
-      select: ['address', 'privateKey'],
-    });
-    return [...allAdmin, ...allUser];
-  }
+  // async allWallet() {
+  //   const allAdmin = await this.adminRepository.find({
+  //     select: ['address', 'privateKey'],
+  //   });
+  //   const allUser = await this.userRepository.find({
+  //     select: ['address', 'privateKey'],
+  //   });
+  //   return [...allAdmin, ...allUser];
+  // }
 
   getBalance(address: string) {
     this.contract.methods.getBalance(address);

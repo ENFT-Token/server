@@ -12,14 +12,6 @@ import { User } from '../user/user.entity';
 
 @Entity()
 export class Admin {
-  @PrimaryColumn()
-  @ApiProperty()
-  email: string;
-
-  @Column()
-  @ApiProperty()
-  password: string;
-
   @Column()
   @ApiProperty()
   location: string;
@@ -28,7 +20,7 @@ export class Admin {
   @ApiProperty({ description: '헬스장 상호명' })
   place: string;
 
-  @Column({ unique: true })
+  @PrimaryColumn()
   @ApiProperty()
   address: string;
 
@@ -39,10 +31,6 @@ export class Admin {
   @Column({ unique: true })
   @ApiProperty()
   nickname: string;
-
-  @Column({ unique: true })
-  @ApiProperty()
-  privateKey: string;
 
   @ManyToMany((type) => User, (user) => user.address)
   @JoinTable({

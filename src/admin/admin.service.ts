@@ -28,15 +28,15 @@ export class AdminService {
     return this.adminRepository.find(options);
   }
 
-  async findOneByEmail(email: string): Promise<Admin> {
-    return this.adminRepository.findOne({ email });
+  async findOneByAddress(address: string): Promise<Admin> {
+    return this.adminRepository.findOne({ address });
   }
 
   async createAccount(createAdminDto: CreateAdminDto) {
-    const isExistByEmail = await this.adminRepository.findOne({
-      email: createAdminDto.email,
+    const isExistByAddress = await this.adminRepository.findOne({
+      address: createAdminDto.address,
     });
-    if (isExistByEmail) {
+    if (isExistByAddress) {
       throw new ForbiddenException({
         statusCode: HttpStatus.FORBIDDEN,
         message: '이미 등록된 사용자입니다.',
@@ -44,18 +44,13 @@ export class AdminService {
       });
     }
 
-    const { password, ...result } = createAdminDto;
-    const salt = await bcrypt.genSalt();
-    const bcryptPassword = await bcrypt.hash(password, salt);
+    // const { password, ...result } = createAdminDto;
+    // const salt = await bcrypt.genSalt();
+    // const bcryptPassword = await bcrypt.hash(password, salt);
 
-    const keyring = await this.caverService.caver.wallet.keyring.generate();
-    await this.adminRepository.save({
-      address: keyring.address,
-      privateKey: keyring.key.privateKey,
-      password: bcryptPassword,
-      ...result,
-    });
-    return result;
+    // const keyring = await this.caverService.caver.wallet.keyring.generate();
+    await this.adminRepository.save(createAdminDto);
+    return createAdminDto;
   }
 
   async mint(
