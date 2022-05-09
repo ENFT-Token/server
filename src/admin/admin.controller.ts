@@ -96,4 +96,19 @@ export class AdminController {
     await this.userService.approveComplete(approve);
     return _mintNFT;
   }
+
+  @ApiOperation({
+    summary: '유저 NFT 발급 거절',
+  })
+  @UseGuards(JwtAuthGuardForAdmin)
+  @Post('/approve/reject')
+  async approveReject(
+    @Req() { user }: { user: IAdminJwt },
+    @Body() approve: CreateApproveDtoWithAddress,
+  ) {
+    await this.userService.approveComplete(approve);
+    return {
+      status: 'succ',
+    };
+  }
 }
