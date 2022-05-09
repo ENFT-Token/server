@@ -134,7 +134,7 @@ export class EventsGateway
     const res : MsgRes = {
       msg: msg,
       userName: userName,
-      sendAt: new Date().toLocaleString(),
+      sendAt: new Date(),
       roomId: roomId,
     }
     console.log(res)
