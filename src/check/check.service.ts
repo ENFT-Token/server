@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user/user.entity';
 import { Repository } from 'typeorm';
 import { Admin } from '../admin/admin.entity';
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 @Injectable()
 export class CheckService {
@@ -42,18 +42,20 @@ export class CheckService {
     await this.adminRepository.save(admin);
   }
 
-  async check(adminEmail: string, address: string, nftToken: string) {
+  async check(adminAddress: string, address: string, nftToken: string) {
     try {
       const admin = await this.adminRepository.findOne({
         relations: ['user'],
         where: {
-          email: adminEmail,
+          address: adminAddress,
         },
       });
-      const result = jwt.verify(nftToken, admin.privateKey) as JwtPayload; // NFT 검증
+      const result = jwt.verify(nftToken, admin.address) as JwtPayload; // NFT 검증
 
       if (!admin || admin?.place !== result?.place) {
-        throw new UnauthorizedException('Invalid NFT Token: 이용권의 위치와 사용하려는 위치가 일치하지 않습니다.');
+        throw new UnauthorizedException(
+          'Invalid NFT Token: 이용권의 위치와 사용하려는 위치가 일치하지 않습니다.',
+        );
       }
       if (!this.isCheckIn(admin.user, address)) {
         // CheckIn

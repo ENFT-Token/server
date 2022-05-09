@@ -4,7 +4,7 @@ import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDtoWithPrivateKey } from 'src/user/dto/create-user.dto';
 import { AdminService } from 'src/admin/admin.service';
-import { CreateAdminDtoWithAddress } from '../admin/dto/create-admin.dto';
+import { CreateAdminDto } from '../admin/dto/create-admin.dto';
 
 @Injectable()
 export class AuthService {
@@ -27,18 +27,12 @@ export class AuthService {
     return null;
   }
 
-  async validateAdmin(email: string, password: string): Promise<any> {
-    const user = await this.adminService.findOneByEmail(email);
-
+  async validateAdmin(address: string): Promise<any> {
+    const user = await this.adminService.findOneByAddress(address);
     if (user) {
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (isMatch) {
-        const { password, ...result } = user;
-        return result;
-      }
-      return false;
+      return user;
     }
-    return null;
+    return false;
   }
 
   async userLogin(user: CreateUserDtoWithPrivateKey) {
@@ -53,17 +47,15 @@ export class AuthService {
     };
   }
 
-  async adminLogin(admin: CreateAdminDtoWithAddress) {
-    const { password, privateKey, ..._admin } = admin;
+  async adminLogin(admin: CreateAdminDto) {
     const payload = {
-      email: _admin.email,
-      address: _admin.address,
+      address: admin.address,
       isAdmin: true,
     };
     return {
       access_token: this.jwtService.sign(payload),
       status: 'success',
-      ..._admin,
+      ...admin,
     };
   }
 }

@@ -2,13 +2,9 @@ import { IsEmail, IsPhoneNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateAdminDto {
-  @IsEmail()
-  @ApiProperty()
-  email: string;
-
   @IsString()
   @ApiProperty()
-  password: string;
+  address: string;
 
   @IsString()
   @ApiProperty()
@@ -28,14 +24,6 @@ export class CreateAdminDto {
 }
 
 export class CreateAdminDtoWithAddress {
-  @IsEmail()
-  @ApiProperty()
-  email: string;
-
-  @IsString()
-  @ApiProperty()
-  password: string;
-
   @IsString()
   @ApiProperty()
   location: string;

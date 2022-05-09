@@ -35,14 +35,15 @@ export class AdminController {
   @UseGuards(JwtAuthGuardForAdmin)
   @Post('/mint')
   async _mint(@Req() { user }: { user: IAdminJwt }, @Body() mint: MintDto) {
-    const { place, address, privateKey } =
-      await this.adminService.findOneByEmail(user.email);
+    const { place, address } = await this.adminService.findOneByAddress(
+      user.address,
+    );
     const _mintNFT = await this.adminService.mint(
       mint.target,
       address,
       place,
       mint.day,
-      privateKey,
+      address,
     );
     return _mintNFT;
   }
@@ -53,7 +54,7 @@ export class AdminController {
   @UseGuards(JwtAuthGuardForAdmin)
   @Get('/memberAddress')
   async _member(@Req() { user }: { user: IAdminJwt }) {
-    const { address } = await this.adminService.findOneByEmail(user.email);
+    const { address } = await this.adminService.findOneByAddress(user.address);
     const owner = await this.caverService.contract.methods
       .ownerByMember()
       .call({
@@ -68,7 +69,7 @@ export class AdminController {
   @UseGuards(JwtAuthGuardForAdmin)
   @Get('/approve/list')
   async approveList(@Req() { user }: { user: IAdminJwt }) {
-    const { place } = await this.adminService.findOneByEmail(user.email);
+    const { place } = await this.adminService.findOneByAddress(user.address);
     const list = await this.userService.findApprove(place);
     return list;
   }
@@ -82,16 +83,32 @@ export class AdminController {
     @Req() { user }: { user: IAdminJwt },
     @Body() approve: CreateApproveDtoWithAddress,
   ) {
-    const { place, address, privateKey } =
-      await this.adminService.findOneByEmail(user.email);
+    const { place, address } = await this.adminService.findOneByAddress(
+      user.address,
+    );
     const _mintNFT = await this.adminService.mint(
       approve.address,
       address,
       place,
       approve.requestDay,
-      privateKey,
+      address,
     );
     await this.userService.approveComplete(approve);
     return _mintNFT;
+  }
+
+  @ApiOperation({
+    summary: '유저 NFT 발급 거절',
+  })
+  @UseGuards(JwtAuthGuardForAdmin)
+  @Post('/approve/reject')
+  async approveReject(
+    @Req() { user }: { user: IAdminJwt },
+    @Body() approve: CreateApproveDtoWithAddress,
+  ) {
+    await this.userService.approveComplete(approve);
+    return {
+      status: 'succ',
+    };
   }
 }

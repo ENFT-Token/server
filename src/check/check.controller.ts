@@ -27,7 +27,7 @@ export class CheckController {
     @Body() checkDto: CheckDto,
   ) {
     const { address, nftToken } = checkDto;
-    return this.checkService.check(user.email, address, nftToken);
+    return this.checkService.check(user.address, address, nftToken);
   }
 
   @Get('/count')
