@@ -13,21 +13,21 @@ export class EventsService {
         private chatRoomRepository: Repository<ChatRoom>,
     ){};
 
-    async getAllChat(roomId: string){
-        const roomIds = roomId.split(" ", 2);
-        console.log(roomIds);
-        const chatRoom1 = this.chatRoomRepository.findOne({roomId: roomIds[0] + " " + roomIds[1]});
-        const chatRoom2 = this.chatRoomRepository.findOne({roomId: roomIds[1] + " " + roomIds[0]});
+    async getAllChat(user1: string, user2: string){
+        const roomId1 = user1 + " " + user2;
+        const roomId2 = user2 + " " + user1;
+        const chatRoom1 = await this.chatRoomRepository.findOne({roomId: roomId1});
+        const chatRoom2 = await this.chatRoomRepository.findOne({roomId: roomId2});
         if(chatRoom1) return chatRoom1;
         else if(chatRoom2) return chatRoom2;
-        else return {s: 'noting'};
+        else return {string: 'noting'};
     }
 
     async getChatRooms(user: string){
-        var data = await this.chatRepository
-        .createQueryBuilder()
-        .where({ name:`%${user}%` })
+        const chatRooms = await this.chatRoomRepository
+        .createQueryBuilder("chat_room")
+        .where("chat_room.roomId like :roomId", { roomId:`%${user}%` })
         .getMany();
-        console.log(data);
+        return chatRooms;
     }
 }

@@ -7,13 +7,16 @@ export class EventsController {
         private eventsService: EventsService,
     ){};
 
-    @Get()
-    async getChat(@Body('roomId') roomId: string){
-        return await this.eventsService.getAllChat(roomId);
+    @Get('/:user1/:user2')
+    async getChat(
+        @Param('user1') user1: string,
+        @Param('user2') user2: string
+        ){
+        return await this.eventsService.getAllChat(user1, user2);
     }
 
     @Get('/:user')
     async getChatRoom(@Param('user') user: string){
-        await this.eventsService.getChatRooms(user);
+        return await this.eventsService.getChatRooms(user);
     }
 }
