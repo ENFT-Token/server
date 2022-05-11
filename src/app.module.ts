@@ -9,7 +9,6 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { CaverModule } from './caver/caver.module';
 import { BoardModule } from './community/board/board.module';
-import { ImageModule } from './community/image/image.module';
 import { AdminModule } from './admin/admin.module';
 import { EventsModule } from './events/events.module';
 import { CheckModule } from './check/check.module';
@@ -27,7 +26,6 @@ import { CheckModule } from './check/check.module';
     HttpModule,
     CaverModule,
     BoardModule,
-    ImageModule,
     AdminModule,
     EventsModule,
     CheckModule,

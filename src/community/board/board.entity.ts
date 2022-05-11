@@ -41,5 +41,5 @@ export class Board {
   writer: User;
 
   @OneToMany((type) => Image, (image) => image.board, { eager: true })
-  image: Image;
+  image: Image[];
 }

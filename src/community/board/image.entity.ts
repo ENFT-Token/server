@@ -6,8 +6,8 @@ export class Image {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'blob', nullable: true })
-  file: Buffer;
+  @Column()
+  image: String;
 
   @ManyToOne((type) => Board, (board) => board.image, { eager: false })
   board: Board;
