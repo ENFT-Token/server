@@ -36,8 +36,12 @@ export class BoardService {
     for (const file of files) {
       generatedFiles.push(createImageURL(file));
     }
-    for(const file of files){
-      console.log(generatedFiles);
+    for(const file of generatedFiles){
+      const new_img = await this.imageRepository.create({
+        image: file,
+        board
+      })
+      await this.imageRepository.save(new_img);
     }
     return board;
   }
