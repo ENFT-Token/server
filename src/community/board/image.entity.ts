@@ -7,7 +7,7 @@ export class Image {
   id: number;
 
   @Column()
-  image: String;
+  image: string;
 
   @ManyToOne((type) => Board, (board) => board.image, { eager: false })
   board: Board;
