@@ -37,6 +37,9 @@ export class Board {
   @Column()
   location: string;
 
+  @Column()
+  cost: string;
+
   @ManyToOne((type) => User, (writer) => writer.board, { eager: true })
   writer: User;
 
