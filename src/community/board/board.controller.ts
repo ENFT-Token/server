@@ -10,6 +10,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserService } from 'src/user/user.service';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
@@ -24,7 +25,7 @@ export class BoardController {
   ) {}
 
   @Post()
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
   @ApiBody({ type: CreateBoardDto })
   async createBoard(@Req() req): Promise<Board> {
