@@ -14,13 +14,13 @@ export class BoardService {
 
   async createBoard(
     createBoardDto: CreateBoardDto,
-    // user: User
+    user: User
   ): Promise<Board> {
     const { ...result } = createBoardDto;
     const lookup = 0;
     const board = this.boardRepository.create({
       lookup,
-      // writer: user,
+      writer: user,
       ...result,
     });
     await this.boardRepository.save(board);

@@ -51,7 +51,7 @@ export class UserService {
       .getMany();
   }
 
-  async findNickname(
+  async dupCheckNickName(
     findNickname: UserNicknameDto,
   ): Promise<{ usable: boolean; message: string }> {
     const { nickname } = findNickname;
@@ -67,6 +67,13 @@ export class UserService {
         message: '사용 가능한 닉네임 입니다.',
       };
     }
+  }
+
+  async findByNickName(
+    nickname: string
+  ):Promise<User>{
+    const user = await this.userRepository.findOne({ nickname });
+    return user;
   }
 
   async requestApprove(createApproveDto: CreateApproveDtoWithAddress) {

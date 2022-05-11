@@ -33,7 +33,7 @@ export class UserController {
   checNicknamekDuplicate(
     @Body() nickname: UserNicknameDto,
   ): Promise<{ usable: boolean; message: string }> {
-    return this.userService.findNickname(nickname);
+    return this.userService.dupCheckNickName(nickname);
   }
 
   @UseGuards(JwtAuthGuard)

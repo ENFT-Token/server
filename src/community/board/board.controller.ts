@@ -24,15 +24,13 @@ export class BoardController {
   ) {}
 
   @Post()
-
   // @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
   @ApiBody({ type: CreateBoardDto })
   async createBoard(@Req() req): Promise<Board> {
     const board = req.body;
-    // const user = await this.userService.findOneByEmail(req.user.email);
-    // return this.boardService.createBoard(board, user);
-    return this.boardService.createBoard(board);
+    const user = await this.userService.findByNickName(req.user.nickname);
+    return this.boardService.createBoard(board, user);
   }
 
   @Get()
