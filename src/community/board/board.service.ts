@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { createImageURL } from 'src/lib/multerOptions';
 import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import { Board } from './board.entity';
@@ -17,10 +18,12 @@ export class BoardService {
 
   async createBoard(
     data,
-    user: User
+    user: User,
+    files: File[]
   ): Promise<Board> {
-    const { title, image, content, location, cost } = data;
+    const { title, content, location, cost } = data;
     const lookup = 0;
+
     const board = this.boardRepository.create({
       lookup,
       writer: user,
@@ -30,15 +33,13 @@ export class BoardService {
       cost
     });
     await this.boardRepository.save(board);
-    image.forEach(async element => {
+    files.forEach(async file => {
       const new_img = await this.imageRepository.create({
-        image: element,
+        image :createImageURL(file),
         board,
-      })
-      await this.imageRepository.save(new_img)
+      });
+      await this.imageRepository.save(new_img);
     });
-
-
     return board;
   }
 

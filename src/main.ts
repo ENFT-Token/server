@@ -15,7 +15,7 @@ async function bootstrap() {
   app.use(json({ limit: '50mb' }));
   app.use(urlencoded({ limit: '50mb', extended: true }));
   app.enableCors();
-  
+  app.use('/public', express.static(join(__dirname, '../public')));
   const options = new DocumentBuilder()
     .setTitle('ENFT API')
     .setDescription('ENFT api')
