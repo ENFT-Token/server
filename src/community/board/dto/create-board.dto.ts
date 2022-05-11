@@ -13,4 +13,9 @@ export class CreateBoardDto {
   @IsString()
   @ApiProperty()
   location: string;
+
+  @IsString()
+  @ApiProperty()
+  cost: string;
+
 }
