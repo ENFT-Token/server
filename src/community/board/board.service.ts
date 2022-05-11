@@ -23,7 +23,7 @@ export class BoardService {
   ): Promise<Board> {
     const { title, content, location, cost } = data;
     const lookup = 0;
-
+    const generatedFiles: string[] = [];
     const board = this.boardRepository.create({
       lookup,
       writer: user,
@@ -33,13 +33,12 @@ export class BoardService {
       cost
     });
     await this.boardRepository.save(board);
-    files.forEach(async file => {
-      const new_img = await this.imageRepository.create({
-        image :createImageURL(file),
-        board,
-      });
-      await this.imageRepository.save(new_img);
-    });
+    for (const file of files) {
+      generatedFiles.push(createImageURL(file));
+    }
+    for(const file of files){
+      console.log(generatedFiles);
+    }
     return board;
   }
 
