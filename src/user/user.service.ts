@@ -119,6 +119,12 @@ export class UserService {
     };
   }
 
+  async findAllPlaceList() {
+    return this.adminRepository.find({
+      select: ['place'],
+    });
+  }
+
   async createAccount(createUserDto: CreateUserDto) {
     const isExistByNickname = await this.userRepository.findOne({
       nickname: createUserDto.nickname,

@@ -50,6 +50,7 @@ export class AuthService {
   async adminLogin(admin: CreateAdminDto) {
     const payload = {
       address: admin.address,
+      place: admin.place,
       isAdmin: true,
     };
     return {

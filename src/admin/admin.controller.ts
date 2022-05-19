@@ -1,22 +1,29 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard, JwtAuthGuardForAdmin } from 'src/auth/jwt-auth.guard';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { JwtAuthGuardForAdmin } from 'src/auth/jwt-auth.guard';
 import { CaverService } from 'src/caver/caver.service';
 import { UserService } from 'src/user/user.service';
 import { MintDto } from './dto/admin.dto';
 
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
-import {
-  CreateApproveDto,
-  CreateApproveDtoWithAddress,
-} from 'src/user/dto/create-approve.dto';
+import { CreateApproveDtoWithAddress } from 'src/user/dto/create-approve.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Admin } from './admin.entity';
 import { Repository } from 'typeorm';
+import { PriceInfoDto } from './dto/priceInfo.dto';
 
 export interface IAdminJwt {
-  email: string;
   address: string;
+  place: string;
 }
 
 @Controller('admin')
@@ -110,5 +117,61 @@ export class AdminController {
     return {
       status: 'succ',
     };
+  }
+
+  @ApiOperation({
+    summary: '관리자 가격 정보 확인',
+  })
+  @UseGuards(JwtAuthGuardForAdmin)
+  @Get('/priceInfo')
+  async getPriceInfo(@Req() { user }: { user: IAdminJwt }) {
+    return await this.adminService.getPriceInfo(user.place);
+  }
+
+  @ApiOperation({
+    summary: '관리자 가격 정보 추가',
+  })
+  @UseGuards(JwtAuthGuardForAdmin)
+  @Post('/priceInfo')
+  async addPriceInfo(
+    @Req() { user }: { user: IAdminJwt },
+    @Body() priceInfoDto: PriceInfoDto,
+  ) {
+    return await this.adminService.addPriceInfo(
+      user.place,
+      priceInfoDto.month,
+      priceInfoDto.klay,
+    );
+  }
+
+  @ApiOperation({
+    summary: '관리자 가격 정보 삭제',
+  })
+  @UseGuards(JwtAuthGuardForAdmin)
+  @Delete('/priceInfo')
+  async deletePriceInfo(
+    @Req() { user }: { user: IAdminJwt },
+    @Body() priceInfoDto: PriceInfoDto,
+  ) {
+    return await this.adminService.deletePriceInfo(
+      user.place,
+      priceInfoDto.month,
+    );
+  }
+
+  @ApiOperation({
+    summary: '관리자 가격 정보 업데이트',
+  })
+  @UseGuards(JwtAuthGuardForAdmin)
+  @Put('/priceInfo')
+  async putPriceInfo(
+    @Req() { user }: { user: IAdminJwt },
+    @Body() priceInfoDto: PriceInfoDto,
+  ) {
+    return await this.adminService.updatePriceInfo(
+      user.place,
+      priceInfoDto.month,
+      priceInfoDto.klay,
+    );
   }
 }

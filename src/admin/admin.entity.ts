@@ -42,3 +42,21 @@ export class Admin {
   @ApiProperty({ description: '체크인/체크아웃 유저' })
   user: User[];
 }
+
+@Entity()
+export class PriceInfo {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  @ApiProperty({ description: '헬스장 상호명' })
+  place: string;
+
+  @Column({ unique: true })
+  @ApiProperty({ description: '설정할 달' })
+  month: number;
+
+  @Column()
+  @ApiProperty({ description: '설정할 달' })
+  klay: number;
+}

@@ -8,7 +8,7 @@ import {
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import { CaverService } from 'src/caver/caver.service';
-import { Admin } from './admin.entity';
+import { Admin, PriceInfo } from './admin.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -20,6 +20,8 @@ export class AdminService {
   constructor(
     @InjectRepository(Admin)
     private adminRepository: Repository<Admin>,
+    @InjectRepository(PriceInfo)
+    private priceInfoRepository: Repository<PriceInfo>,
     @Inject(forwardRef(() => CaverService))
     private readonly caverService: CaverService,
   ) {}
@@ -30,6 +32,39 @@ export class AdminService {
 
   async findOneByAddress(address: string): Promise<Admin> {
     return this.adminRepository.findOne({ address });
+  }
+
+  async getPriceInfo(place: string): Promise<PriceInfo[]> {
+    return this.priceInfoRepository.find({
+      place,
+    });
+  }
+
+  async addPriceInfo(
+    place: string,
+    month: number,
+    klay: number,
+  ): Promise<PriceInfo> {
+    return this.priceInfoRepository.save({
+      place,
+      month,
+      klay,
+    });
+  }
+
+  async deletePriceInfo(place: string, month: number): Promise<PriceInfo> {
+    const priceInfo = await this.priceInfoRepository.findOne({ place, month });
+    return this.priceInfoRepository.remove(priceInfo);
+  }
+
+  async updatePriceInfo(
+    place: string,
+    month: number,
+    updateKlay: number,
+  ): Promise<PriceInfo> {
+    const priceInfo = await this.priceInfoRepository.findOne({ place, month });
+    priceInfo.klay = updateKlay;
+    return this.priceInfoRepository.save(priceInfo);
   }
 
   async createAccount(createAdminDto: CreateAdminDto) {

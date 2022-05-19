@@ -13,14 +13,10 @@ export class BoardService {
     @InjectRepository(Board)
     private boardRepository: Repository<Board>,
     @InjectRepository(Image)
-    private imageRepository: Repository<Image>
+    private imageRepository: Repository<Image>,
   ) {}
 
-  async createBoard(
-    data,
-    user: User,
-    files: File[]
-  ): Promise<Board> {
+  async createBoard(data, user: User, files: File[]): Promise<Board> {
     const { title, content, location, cost } = data;
     const lookup = 0;
     const generatedFiles: string[] = [];
@@ -30,17 +26,17 @@ export class BoardService {
       title,
       content,
       location,
-      cost
+      cost,
     });
     await this.boardRepository.save(board);
     for (const file of files) {
       generatedFiles.push(createImageURL(file));
     }
-    for(const file of generatedFiles){
+    for (const file of generatedFiles) {
       const new_img = await this.imageRepository.create({
         image: file,
-        board
-      })
+        board,
+      });
       await this.imageRepository.save(new_img);
     }
     return board;
@@ -50,7 +46,6 @@ export class BoardService {
     const board = await this.boardRepository.findOne(id);
     return board;
   }
-  
 
   async getAllBoard(): Promise<Board[]> {
     const boards = await this.boardRepository.find();
