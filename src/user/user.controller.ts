@@ -89,4 +89,11 @@ export class UserController {
       msg: '요청 완료',
     };
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/healthList')
+  @ApiOperation({ summary: '헬스장 가격표 리스트' })
+  async healthList() {
+    return await this.userService.findAllPriceInfo();
+  }
 }

@@ -11,7 +11,7 @@ import { CreateUserDto, UserNicknameDto } from './dto/create-user.dto';
 import { Approve, User } from './user.entity';
 import { CaverService } from 'src/caver/caver.service';
 import { CreateApproveDtoWithAddress } from './dto/create-approve.dto';
-import { Admin } from '../admin/admin.entity';
+import { Admin, PriceInfo } from '../admin/admin.entity';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -22,11 +22,30 @@ export class UserService {
     private userRepository: Repository<User>,
     @InjectRepository(Approve)
     private approveRepository: Repository<Approve>,
+    @InjectRepository(PriceInfo)
+    private priceInfoRepository: Repository<PriceInfo>,
     @InjectRepository(Admin)
     private adminRepository: Repository<Admin>,
     @Inject(forwardRef(() => CaverService))
     private caverService: CaverService,
   ) {}
+
+  async findAllPriceInfo() {
+    const priceInfos = await this.priceInfoRepository.find();
+    return priceInfos.reduce(
+      (result, elem) => ({
+        ...result,
+        [elem.place]: [
+          ...(result[elem.place] ?? []),
+          {
+            month: elem.month,
+            klay: elem.klay,
+          },
+        ],
+      }),
+      {},
+    );
+  }
 
   async findOneByWallet(address: string): Promise<User> {
     return this.userRepository.findOne({ address });
