@@ -1,0 +1,33 @@
+<script>
+  const form = document.getElementById('form');
+  const inputFile = document.getElementById('file');
+
+  const formData = new FormData();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    for (const file of inputFile.files) {
+      formData.append('images', file);
+    }
+
+    fetch('http://13.209.200.101/board', {
+      method: 'post',
+      body: formData,
+    }).catch((error) => ('Something went wrong!', error));
+  };
+  form.addEventListener('submit', handleSubmit);
+</script>
+<body>
+  <div class="container">
+    <h1>Multipart File Upload</h1>
+    <form id="form" enctype="multipart/form-data">
+      <div class="input-group">
+        <label for="files">Select files</label>
+        <input id="file" type="file" multiple />
+      </div>
+      <button class="submit-btn" type="submit">Upload</button>
+    </form>
+  </div>
+  <script src="index.js"></script>
+</body>

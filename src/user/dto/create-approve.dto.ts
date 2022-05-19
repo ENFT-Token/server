@@ -15,7 +15,6 @@ export class CreateApproveDtoWithAddress {
   requestDay: number;
 }
 
-
 export class CreateApproveDto {
   @IsString()
   @ApiProperty()

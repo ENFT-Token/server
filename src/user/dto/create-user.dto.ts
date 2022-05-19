@@ -16,10 +16,6 @@ export class CreateUserDto {
 
   @IsString()
   @ApiProperty()
-  profile: string;
-
-  @IsString()
-  @ApiProperty()
   sex: string;
 }
 

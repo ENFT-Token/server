@@ -12,6 +12,8 @@ import { Approve, User } from './user.entity';
 import { CaverService } from 'src/caver/caver.service';
 import { CreateApproveDtoWithAddress } from './dto/create-approve.dto';
 import { Admin } from '../admin/admin.entity';
+import fs from 'fs/promises';
+import path from 'path';
 
 @Injectable()
 export class UserService {
@@ -69,9 +71,7 @@ export class UserService {
     }
   }
 
-  async findByNickName(
-    nickname: string
-  ):Promise<User>{
+  async findByNickName(nickname: string): Promise<User> {
     const user = await this.userRepository.findOne({ nickname });
     return user;
   }
@@ -133,9 +133,11 @@ export class UserService {
     const privateKey = this.caverService.caver.wallet.keyring.generateSingleKey(
       createUserDto.address,
     );
-    const { profile, ..._user } = createUserDto;
+    const { ..._user } = createUserDto;
+    //    fs.(path.join(__dirname, 'public', _user.nickname + '.png'));
     await this.userRepository.save({
       ...createUserDto,
+      profile: '/public/default_profile.png',
       privateKey,
     });
     return {

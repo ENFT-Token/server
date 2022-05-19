@@ -28,7 +28,7 @@ export class User {
   @ApiProperty()
   location: string;
 
-  @Column({ type: 'blob' })
+  @Column()
   @ApiProperty()
   profile: string;
 
