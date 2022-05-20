@@ -53,7 +53,7 @@ export class UserService {
         [elem.place]: {
           cover_img: elem.admin?.cover_img,
           list: [
-            ...(result[elem.place] ?? []),
+            ...(result[elem.place]?.list ?? []),
             {
               month: elem.month,
               klay: elem.klay,
