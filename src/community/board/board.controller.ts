@@ -40,7 +40,7 @@ export class BoardController {
   async createBoard(
     @Req() req,
     @UploadedFiles() files: File[],
-    ): Promise<Board> {
+  ): Promise<Board> {
     const board = req.body;
     const user = await this.userService.findByNickName(req.user.nickname);
     return this.boardService.createBoard(board, user, files);

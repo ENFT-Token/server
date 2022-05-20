@@ -17,6 +17,11 @@ export class CreateUserDto {
   @IsString()
   @ApiProperty()
   sex: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty()
+  profile: string;
 }
 
 export class CreateUserDtoWithPrivateKey {

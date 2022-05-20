@@ -158,11 +158,10 @@ export class UserService {
     const privateKey = this.caverService.caver.wallet.keyring.generateSingleKey(
       createUserDto.address,
     );
-    const { ..._user } = createUserDto;
-    //    fs.(path.join(__dirname, 'public', _user.nickname + '.png'));
+    const { profile, ..._user } = createUserDto;
     await this.userRepository.save({
       ...createUserDto,
-      profile: '/public/default_profile.png',
+      profile: profile ? profile : '/public/default_profile.png',
       privateKey,
     });
     return {

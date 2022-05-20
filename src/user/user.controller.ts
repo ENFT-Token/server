@@ -6,11 +6,18 @@ import {
   HttpStatus,
   Post,
   Req,
+  UploadedFile,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CaverService } from 'src/caver/caver.service';
+import { createImageURL, multerOptions } from 'src/lib/multerOptions';
 import { CreateApproveDto } from './dto/create-approve.dto';
 import { UserNicknameDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
@@ -88,6 +95,13 @@ export class UserController {
     return {
       msg: '요청 완료',
     };
+  }
+
+  @Post('/upload_profile')
+  @UsePipes(ValidationPipe)
+  @UseInterceptors(FileInterceptor('images', multerOptions))
+  async uploadProfile(@UploadedFile() file) {
+    return `/public/${file.filename}`;
   }
 
   @UseGuards(JwtAuthGuard)
