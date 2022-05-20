@@ -50,14 +50,16 @@ export class UserService {
     return priceInfos.reduce(
       (result, elem) => ({
         ...result,
-        [elem.place]: [
-          ...(result[elem.place] ?? []),
-          {
-            month: elem.month,
-            klay: elem.klay,
-            cover_img: elem.admin.cover_img,
-          },
-        ],
+        [elem.place]: {
+          cover_img: elem.admin?.cover_img,
+          list: [
+            ...(result[elem.place] ?? []),
+            {
+              month: elem.month,
+              klay: elem.klay,
+            },
+          ],
+        },
       }),
       {},
     );
