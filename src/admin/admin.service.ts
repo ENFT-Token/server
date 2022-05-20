@@ -92,7 +92,7 @@ export class AdminService {
     // const keyring = await this.caverService.caver.wallet.keyring.generate();
     await this.adminRepository.save({
       ...createAdminDto,
-      profile: '/public/default_cover.png',
+      cover_img: '/public/default_cover.png',
     });
     return createAdminDto;
   }
