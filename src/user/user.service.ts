@@ -31,7 +31,22 @@ export class UserService {
   ) {}
 
   async findAllPriceInfo() {
-    const priceInfos = await this.priceInfoRepository.find();
+    const priceInfos: any = await this.priceInfoRepository
+      .createQueryBuilder('priceInfo')
+      .leftJoinAndMapOne(
+        'priceInfo.admin',
+        Admin,
+        'admin',
+        'admin.place = priceInfo.place',
+      )
+      .select([
+        'priceInfo.place',
+        'priceInfo.month',
+        'priceInfo.klay',
+        'admin.cover_img',
+      ])
+      .getMany();
+
     return priceInfos.reduce(
       (result, elem) => ({
         ...result,
@@ -40,6 +55,7 @@ export class UserService {
           {
             month: elem.month,
             klay: elem.klay,
+            cover_img: elem.admin.cover_img,
           },
         ],
       }),

@@ -104,7 +104,6 @@ export class UserController {
     return `/public/${file.filename}`;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('/healthList')
   @ApiOperation({ summary: '헬스장 가격표 리스트' })
   async healthList() {
