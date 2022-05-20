@@ -6,7 +6,11 @@ import {
   Post,
   Put,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { JwtAuthGuardForAdmin } from 'src/auth/jwt-auth.guard';
 import { CaverService } from 'src/caver/caver.service';
@@ -20,6 +24,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Admin } from './admin.entity';
 import { Repository } from 'typeorm';
 import { PriceInfoDto } from './dto/priceInfo.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from 'src/lib/multerOptions';
 
 export interface IAdminJwt {
   address: string;
@@ -171,6 +177,20 @@ export class AdminController {
       user.place,
       priceInfoDto.month,
       priceInfoDto.klay,
+    );
+  }
+
+  @UseGuards(JwtAuthGuardForAdmin)
+  @Post('/upload_cover')
+  @UsePipes(ValidationPipe)
+  @UseInterceptors(FileInterceptor('image', multerOptions))
+  async uploadProfile(
+    @Req() { user }: { user: IAdminJwt },
+    @UploadedFile() file,
+  ) {
+    return this.adminService.updateCoverImg(
+      user.address,
+      `/public/${file.filename}`,
     );
   }
 }

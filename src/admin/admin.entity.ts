@@ -32,6 +32,10 @@ export class Admin {
   @ApiProperty()
   nickname: string;
 
+  @Column()
+  @ApiProperty({ nullable: true })
+  cover_img: string;
+
   @ManyToMany((type) => User, (user) => user.address)
   @JoinTable({
     joinColumn: {

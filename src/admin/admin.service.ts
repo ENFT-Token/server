@@ -40,6 +40,12 @@ export class AdminService {
     });
   }
 
+  async updateCoverImg(address: string, path: string): Promise<Admin> {
+    const admin = await this.adminRepository.findOne({ address });
+    admin.cover_img = path;
+    return this.adminRepository.save(admin);
+  }
+
   async addPriceInfo(
     place: string,
     month: number,
@@ -84,7 +90,10 @@ export class AdminService {
     // const bcryptPassword = await bcrypt.hash(password, salt);
 
     // const keyring = await this.caverService.caver.wallet.keyring.generate();
-    await this.adminRepository.save(createAdminDto);
+    await this.adminRepository.save({
+      ...createAdminDto,
+      profile: '/public/default_cover.png',
+    });
     return createAdminDto;
   }
 
