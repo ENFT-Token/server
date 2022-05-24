@@ -35,7 +35,6 @@ export interface IAdminJwt {
 @Controller('admin')
 export class AdminController {
   constructor(
-    @InjectRepository(Admin)
     private readonly userService: UserService,
     private readonly adminService: AdminService,
     private readonly caverService: CaverService,
