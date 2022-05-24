@@ -7,8 +7,6 @@ import { urlencoded, json } from 'body-parser';
 import * as express from 'express';
 import { resolve, join } from 'path';
 
-
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
   app.use(express.static(join(process.cwd(), '../client/dist/')));
