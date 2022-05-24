@@ -83,7 +83,6 @@ export class CaverService implements OnModuleInit {
     //   this.userKeyring[wallet.address] = keyring;
     //   this.caver.wallet.add(keyring);
     // });
-
     this.contract = new this.caver.contract(
       ABI as AbiItem[],
       this.configService.get('CONTRACT_ADDRESS'),
