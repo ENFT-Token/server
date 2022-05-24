@@ -44,6 +44,7 @@ export class UserService {
         'priceInfo.month',
         'priceInfo.klay',
         'admin.cover_img',
+        'admin.location',
       ])
       .getMany();
 
@@ -51,6 +52,7 @@ export class UserService {
       (result, elem) => ({
         ...result,
         [elem.place]: {
+          location: elem.admin?.location,
           cover_img: elem.admin?.cover_img,
           list: [
             ...(result[elem.place]?.list ?? []),
