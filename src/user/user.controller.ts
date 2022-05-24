@@ -4,7 +4,9 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Param,
   Post,
+  Query,
   Req,
   UploadedFile,
   UploadedFiles,
@@ -38,7 +40,7 @@ export class UserController {
   @ApiOperation({ summary: 'nickname 중복체크 API' })
   @ApiBody({ type: UserNicknameDto })
   checNicknamekDuplicate(
-    @Body() nickname: UserNicknameDto,
+    @Query() nickname: UserNicknameDto,
   ): Promise<{ usable: boolean; message: string }> {
     return this.userService.dupCheckNickName(nickname);
   }
