@@ -47,7 +47,7 @@ export class UserService {
       ])
       .getMany();
 
-    return priceInfos.reduce(
+    const transData = priceInfos.reduce(
       (result, elem) => ({
         ...result,
         [elem.place]: {
@@ -63,6 +63,11 @@ export class UserService {
       }),
       {},
     );
+
+    return Object.entries(transData).map((v) => ({
+      place: v[0],
+      ...(v[1] as any),
+    }));
   }
 
   async findOneByWallet(address: string): Promise<User> {
