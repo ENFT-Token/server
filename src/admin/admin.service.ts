@@ -119,10 +119,11 @@ export class AdminService {
     // from은 관리자 지갑이여야하고
     // 돈은 다른 사람이 내야함
     // 수수료 대납 구현
+
     const _mintNFT = await this.caverService.contract.methods
-      .mintNFT(targetAddress, token)
+      .mintNFT(myAddress, targetAddress, token)
       .send({
-        from: myAddress,
+        from: this.caverService.feeKeyring.address,
         gas: 3000000,
         feeDelegation: true,
         feePayer: this.caverService.feeKeyring.address,

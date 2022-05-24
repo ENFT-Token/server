@@ -67,10 +67,8 @@ export class AdminController {
   async _member(@Req() { user }: { user: IAdminJwt }) {
     const { address } = await this.adminService.findOneByAddress(user.address);
     const owner = await this.caverService.contract.methods
-      .ownerByMember()
-      .call({
-        from: address,
-      });
+      .ownerByMember(address)
+      .call();
     return owner;
   }
 
