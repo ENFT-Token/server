@@ -95,6 +95,16 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post('/burnNFT')
+  @ApiOperation({ summary: 'user가 소유한 NFT 소각' })
+  async burnNFT(
+    @Req() { user }: { user: IUserJwt },
+    @Body() burnNftDto: TransferNftDto,
+  ) {
+    return this.userService.burnNFT(user.address, burnNftDto.nft);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post('/approve')
   @ApiOperation({ summary: 'user가 관리자한테 승인 요청' })
   async approve(

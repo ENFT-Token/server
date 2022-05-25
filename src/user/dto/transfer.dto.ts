@@ -10,3 +10,9 @@ export class TransferNftDto {
   @ApiProperty()
   nft: string;
 }
+
+export class BurnNftDto {
+  @IsString()
+  @ApiProperty()
+  nft: string;
+}

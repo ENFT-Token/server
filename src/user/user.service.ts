@@ -267,4 +267,46 @@ export class UserService {
       HttpStatus.FORBIDDEN,
     );
   }
+
+  async burnNFT(userAddress: string, nft: string) {
+    const { place } = jwt.decode(nft) as Record<string, any>;
+    const { address: adminAddress } = await this.adminRepository.findOne({
+      place,
+    });
+
+    const balanceOf = await this.caverService.contract.methods
+      .balanceOf(userAddress)
+      .call();
+
+    let findNftId = -1;
+    for (let i = 0; i < balanceOf; i++) {
+      const tokenIdx = await this.caverService.contract.methods
+        .tokenOfOwnerByIndex(userAddress, i)
+        .call();
+      const findNft = await this.caverService.contract.methods
+        .tokenURI(tokenIdx)
+        .call();
+      if (findNft === nft) {
+        findNftId = tokenIdx;
+        break;
+      }
+    }
+    if (findNftId != -1) {
+      return await this.caverService.contract.methods
+        .burnNFT(adminAddress, userAddress, findNftId)
+        .send({
+          from: this.caverService.feeKeyring.address,
+          gas: 3000000,
+          feeDelegation: true,
+          feePayer: this.caverService.feeKeyring.address,
+        });
+    }
+    throw new HttpException(
+      {
+        status: HttpStatus.FORBIDDEN,
+        error: '소각 실패',
+      },
+      HttpStatus.FORBIDDEN,
+    );
+  }
 }
