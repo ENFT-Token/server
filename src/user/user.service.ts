@@ -35,10 +35,13 @@ export class UserService {
   ) {}
 
   async addressToUsers(address: string[]) {
+    console.log(address);
     return await this.userRepository.find({
-      where: Raw((alias) =>
-        address.map((v) => `address = '${v}'`).join(' OR '),
-      ),
+      where: {
+        address: Raw((alias) =>
+          address.map((v) => `address = '${v}'`).join(' OR '),
+        ),
+      },
       select: ['address', 'location', 'profile', 'nickname', 'sex'],
     });
   }
