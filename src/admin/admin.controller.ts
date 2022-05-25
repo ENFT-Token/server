@@ -63,13 +63,14 @@ export class AdminController {
     summary: '관리자가 소유한 멤버의 지갑 주소 API',
   })
   @UseGuards(JwtAuthGuardForAdmin)
-  @Get('/memberAddress')
+  @Get('/member')
   async _member(@Req() { user }: { user: IAdminJwt }) {
     const { address } = user;
     const owner = await this.caverService.contract.methods
       .ownerByMember(address)
       .call();
-    return owner;
+    const uniqueAddrList = [...new Set(owner as string[])];
+    return await this.userService.addressToUsers(uniqueAddrList);
   }
 
   @ApiOperation({

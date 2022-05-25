@@ -7,7 +7,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, Raw, Repository } from 'typeorm';
 import { CreateUserDto, UserNicknameDto } from './dto/create-user.dto';
 import { Approve, User } from './user.entity';
 import { CaverService } from 'src/caver/caver.service';
@@ -33,6 +33,15 @@ export class UserService {
     @Inject(forwardRef(() => CaverService))
     private caverService: CaverService,
   ) {}
+
+  async addressToUsers(address: string[]) {
+    return await this.userRepository.find({
+      where: Raw((alias) =>
+        address.map((v) => `address = '${v}'`).join(' OR '),
+      ),
+      select: ['address', 'location', 'profile', 'nickname', 'sex'],
+    });
+  }
 
   async findAllPriceInfo() {
     const priceInfos: any = await this.priceInfoRepository
