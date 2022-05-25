@@ -212,7 +212,7 @@ export class UserService {
     });
 
     const owner = await this.caverService.contract.methods
-      .ownerByMember(userAddress)
+      .ownerByMember(adminAddress)
       .call();
 
     let flag = false;
