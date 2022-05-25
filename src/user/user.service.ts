@@ -206,7 +206,7 @@ export class UserService {
 
   async transferNFT(userAddress: string, transferNftDto: TransferNftDto) {
     const { to, nft } = transferNftDto;
-    const { place } = JSON.parse(jwt.decode(nft) as string);
+    const { place } = jwt.decode(nft) as Record<string, any>;
     const { address: adminAddress } = await this.adminRepository.findOne({
       place,
     });
@@ -250,24 +250,14 @@ export class UserService {
       }
     }
     if (findNftId != -1) {
-      const statusOwnerByMember = await this.caverService.contract.methods
-        .setOwnerByMemeber(adminAddress, userAddress, to)
+      return await this.caverService.contract.methods
+        .transferNFT(adminAddress, userAddress, to, findNftId)
         .send({
           from: this.caverService.feeKeyring.address,
           gas: 3000000,
           feeDelegation: true,
           feePayer: this.caverService.feeKeyring.address,
         });
-      if (statusOwnerByMember === true) {
-        return await this.caverService.contract.methods
-          .transferFrom(userAddress, to, findNftId)
-          .send({
-            from: this.caverService.feeKeyring.address,
-            gas: 3000000,
-            feeDelegation: true,
-            feePayer: this.caverService.feeKeyring.address,
-          });
-      }
     }
     throw new HttpException(
       {

@@ -85,7 +85,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/transferNFT')
+  @Post('/transferNFT')
   @ApiOperation({ summary: 'user가 소유한 NFT 전송' })
   async transferNFT(
     @Req() { user }: { user: IUserJwt },
