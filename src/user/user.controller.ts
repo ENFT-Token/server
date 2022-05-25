@@ -22,6 +22,7 @@ import { CaverService } from 'src/caver/caver.service';
 import { createImageURL, multerOptions } from 'src/lib/multerOptions';
 import { CreateApproveDto } from './dto/create-approve.dto';
 import { UserNicknameDto } from './dto/create-user.dto';
+import { TransferNftDto } from './dto/transfer.dto';
 import { UserService } from './user.service';
 
 interface IUserJwt {
@@ -81,6 +82,16 @@ export class UserController {
     }
 
     return nfts;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/transferNFT')
+  @ApiOperation({ summary: 'user가 소유한 NFT 전송' })
+  async transferNFT(
+    @Req() { user }: { user: IUserJwt },
+    @Body() transferNftDto: TransferNftDto,
+  ) {
+    return this.userService.transferNFT(user.address, transferNftDto);
   }
 
   @UseGuards(JwtAuthGuard)

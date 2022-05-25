@@ -65,7 +65,7 @@ export class AdminController {
   @UseGuards(JwtAuthGuardForAdmin)
   @Get('/memberAddress')
   async _member(@Req() { user }: { user: IAdminJwt }) {
-    const { address } = await this.adminService.findOneByAddress(user.address);
+    const { address } = user;
     const owner = await this.caverService.contract.methods
       .ownerByMember(address)
       .call();

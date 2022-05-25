@@ -1,6 +1,7 @@
 import {
   ForbiddenException,
   forwardRef,
+  HttpException,
   HttpStatus,
   Inject,
   Injectable,
@@ -14,6 +15,9 @@ import { CreateApproveDtoWithAddress } from './dto/create-approve.dto';
 import { Admin, PriceInfo } from '../admin/admin.entity';
 import fs from 'fs/promises';
 import path from 'path';
+import jwt from 'jsonwebtoken';
+
+import { TransferNftDto } from './dto/transfer.dto';
 
 @Injectable()
 export class UserService {
@@ -198,5 +202,79 @@ export class UserService {
 
   async find(options?: FindManyOptions<User>): Promise<User[]> {
     return this.userRepository.find(options);
+  }
+
+  async transferNFT(userAddress: string, transferNftDto: TransferNftDto) {
+    const { to, nft } = transferNftDto;
+    const { place } = JSON.parse(jwt.decode(nft) as string);
+    const { address: adminAddress } = await this.adminRepository.findOne({
+      place,
+    });
+
+    const owner = await this.caverService.contract.methods
+      .ownerByMember(userAddress)
+      .call();
+
+    let flag = false;
+    for (let i = 0; i < owner.length; i++) {
+      if (owner[i] == userAddress) {
+        flag = true;
+        break;
+      }
+    }
+    if (!flag) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'from 지갑이 관리자에게 존재하지 않습니다.',
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    const balanceOf = await this.caverService.contract.methods
+      .balanceOf(userAddress)
+      .call();
+
+    let findNftId = -1;
+    for (let i = 0; i < balanceOf; i++) {
+      const tokenIdx = await this.caverService.contract.methods
+        .tokenOfOwnerByIndex(userAddress, i)
+        .call();
+      const findNft = await this.caverService.contract.methods
+        .tokenURI(tokenIdx)
+        .call();
+      if (findNft === nft) {
+        findNftId = tokenIdx;
+        break;
+      }
+    }
+    if (findNftId != -1) {
+      const statusOwnerByMember = await this.caverService.contract.methods
+        .setOwnerByMemeber(adminAddress, userAddress, to)
+        .send({
+          from: this.caverService.feeKeyring.address,
+          gas: 3000000,
+          feeDelegation: true,
+          feePayer: this.caverService.feeKeyring.address,
+        });
+      if (statusOwnerByMember === true) {
+        return await this.caverService.contract.methods
+          .transferFrom(userAddress, to, findNftId)
+          .send({
+            from: this.caverService.feeKeyring.address,
+            gas: 3000000,
+            feeDelegation: true,
+            feePayer: this.caverService.feeKeyring.address,
+          });
+      }
+    }
+    throw new HttpException(
+      {
+        status: HttpStatus.FORBIDDEN,
+        error: '전송 실패',
+      },
+      HttpStatus.FORBIDDEN,
+    );
   }
 }
