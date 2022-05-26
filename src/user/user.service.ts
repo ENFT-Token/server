@@ -36,6 +36,7 @@ export class UserService {
 
   async addressToUsers(address: string[]) {
     console.log(address);
+    if (address.length === 0) return [];
     return await this.userRepository.find({
       where: {
         address: Raw((alias) =>

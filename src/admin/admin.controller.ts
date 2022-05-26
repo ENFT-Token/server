@@ -66,10 +66,11 @@ export class AdminController {
   @Get('/member')
   async _member(@Req() { user }: { user: IAdminJwt }) {
     const { address } = user;
-    const owner = await this.caverService.contract.methods
+    const owner = (await this.caverService.contract.methods
       .ownerByMember(address)
-      .call();
-    const uniqueAddrList = [...new Set(owner as string[])];
+      .call()) as string[];
+
+    const uniqueAddrList = [...new Set(owner)];
     return await this.userService.addressToUsers(uniqueAddrList);
   }
 
