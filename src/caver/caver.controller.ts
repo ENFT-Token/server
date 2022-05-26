@@ -11,6 +11,10 @@ import { CaverService } from './caver.service';
 @Controller('caver')
 export class CaverController {
   constructor(private readonly caverService: CaverService) {}
+  @Get('/contract')
+  async getContranct() {
+    return this.caverService.getContranct();
+  }
 
   @Get('/symbol')
   async getSymbol() {

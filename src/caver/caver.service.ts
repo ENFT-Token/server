@@ -31,6 +31,9 @@ export class CaverService implements OnModuleInit {
   //   });
   //   return [...allAdmin, ...allUser];
   // }
+  getContranct(): string {
+    return this.configService.get('CONTRACT_ADDRESS');
+  }
 
   getBalance(address: string) {
     this.contract.methods.getBalance(address);
