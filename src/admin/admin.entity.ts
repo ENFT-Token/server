@@ -56,7 +56,7 @@ export class PriceInfo {
   @ApiProperty({ description: '헬스장 상호명' })
   place: string;
 
-  @Column({ unique: true })
+  @Column()
   @ApiProperty({ description: '설정할 달' })
   month: number;
 
