@@ -223,6 +223,27 @@ export class UserService {
       place,
     });
 
+    const owner = await this.caverService.contract.methods
+      .ownerByMember(adminAddress)
+      .call();
+
+    let flag = false;
+    for (let i = 0; i < owner.length; i++) {
+      if (owner[i] == userAddress) {
+        flag = true;
+        break;
+      }
+    }
+    if (!flag) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'from 지갑이 관리자에게 존재하지 않습니다.',
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
     const balanceOf = await this.caverService.contract.methods
       .balanceOf(userAddress)
       .call();
