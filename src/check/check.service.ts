@@ -14,6 +14,15 @@ export class CheckService {
     private adminRepository: Repository<Admin>,
   ) {}
 
+  async allCheckInUser(place: string) {
+    const admin = await this.adminRepository.findOne({
+      relations: ['user'],
+      where: {
+        place,
+      },
+    });
+    return admin?.user ?? [];
+  }
   async count(place: string) {
     const admin = await this.adminRepository.findOne({
       relations: ['user'],

@@ -30,11 +30,24 @@ export class CheckController {
     return this.checkService.check(user.address, address, nftToken);
   }
 
+  @ApiOperation({
+    summary: '현재 헬스장 체크인 유저 리스트',
+  })
+  @UseGuards(JwtAuthGuardForAdmin)
+  @Get('/')
+  async allCheckUesr(@Req() { user }: { user: IAdminJwt }) {
+    return this.checkService.allCheckInUser(user.place);
+  }
+
+  @ApiOperation({
+    summary: '현재 헬스장 체크인 명 수',
+  })
+  @UseGuards(JwtAuthGuardForAdmin)
   @Get('/count')
-  async count(@Query() { place }: PlaceDto) {
-    const count = await this.checkService.count(place);
+  async count(@Req() { user }: { user: IAdminJwt }) {
+    const count = await this.checkService.count(user.place);
     return {
-      place,
+      place: user.place,
       count,
     };
   }
