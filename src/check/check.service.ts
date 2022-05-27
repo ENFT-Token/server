@@ -41,6 +41,7 @@ export class CheckService {
   async checkIn(admin: Admin, address: string) {
     const user = await this.userRepository.findOne({ address });
     if (!admin?.user) admin.user = [];
+    user.updateAt = new Date();
     admin.user.push(user);
     await this.adminRepository.save(admin);
   }
