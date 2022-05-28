@@ -36,6 +36,14 @@ export class CheckService {
     return admin?.user?.length ?? 0;
   }
 
+  async todayCount(place: string) {
+    const today = await this.todayCountRepository.findOne({
+      date: moment().format('yyyy-MM-DD'),
+      place: place,
+    });
+    return today?.count ? today.count : 0;
+  }
+
   isCheckIn(checkUser: User[], address: string) {
     const idx = checkUser.findIndex((user) => user.address === address);
     return idx === -1 ? false : true;
@@ -52,6 +60,7 @@ export class CheckService {
     // 하루 누적 계산
     const today = await this.todayCountRepository.findOne({
       date: moment().format('yyyy-MM-DD'),
+      place: admin.place,
     });
     if (today) {
       today.count += 1;

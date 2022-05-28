@@ -40,6 +40,18 @@ export class CheckController {
   }
 
   @ApiOperation({
+    summary: '오늘 헬스장 체크인 명 수',
+  })
+  @UseGuards(JwtAuthGuardForAdmin)
+  @Get('/today_count')
+  async todayCount(@Req() { user }: { user: IAdminJwt }) {
+    const count = await this.checkService.todayCount(user.place);
+    return {
+      place: user.place,
+      count,
+    };
+  }
+  @ApiOperation({
     summary: '현재 헬스장 체크인 명 수',
   })
   @UseGuards(JwtAuthGuardForAdmin)
