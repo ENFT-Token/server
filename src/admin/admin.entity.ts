@@ -60,7 +60,7 @@ export class PriceInfo {
   @ApiProperty({ description: '설정할 달' })
   month: number;
 
-  @Column()
+  @Column('decimal', { precision: 5, scale: 2 })
   @ApiProperty({ description: '설정할 클레이튼' })
   klay: number;
 }
