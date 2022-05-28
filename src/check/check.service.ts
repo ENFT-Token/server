@@ -2,8 +2,9 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user/user.entity';
 import { Repository } from 'typeorm';
-import { Admin } from '../admin/admin.entity';
+import { Admin, TodayCount } from '../admin/admin.entity';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import moment from 'moment';
 
 @Injectable()
 export class CheckService {
@@ -12,6 +13,8 @@ export class CheckService {
     private userRepository: Repository<User>,
     @InjectRepository(Admin)
     private adminRepository: Repository<Admin>,
+    @InjectRepository(TodayCount)
+    private todayCountRepository: Repository<TodayCount>,
   ) {}
 
   async allCheckInUser(place: string) {
@@ -45,6 +48,21 @@ export class CheckService {
     this.userRepository.save(user);
     admin.user.push(user);
     await this.adminRepository.save(admin);
+
+    // 하루 누적 계산
+    const today = await this.todayCountRepository.findOne({
+      date: moment().format('yyyy-MM-DD'),
+    });
+    if (today) {
+      today.count += 1;
+      await this.todayCountRepository.save(today);
+    } else {
+      await this.todayCountRepository.save({
+        place: admin.place,
+        date: moment().format('yyyy-MM-DD'),
+        count: 0,
+      });
+    }
   }
 
   async checkOut(admin: Admin, address: string) {

@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
@@ -63,4 +64,22 @@ export class PriceInfo {
   @Column('decimal', { precision: 5, scale: 2 })
   @ApiProperty({ description: '설정할 클레이튼' })
   klay: number;
+}
+
+@Entity()
+export class TodayCount {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  @ApiProperty({ description: '헬스장 상호명' })
+  place: string;
+
+  @Column()
+  @ApiProperty({ description: '날짜' })
+  date: string;
+
+  @Column()
+  @ApiProperty({ description: '날짜의 입장한 사ㅏㄹㅁ' })
+  count: number;
 }
