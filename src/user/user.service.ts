@@ -139,6 +139,11 @@ export class UserService {
     return user;
   }
 
+  async findByAddress(address: string): Promise<User> {
+    const user = await this.userRepository.findOne({ address });
+    return user;
+  }
+
   async requestApprove(createApproveDto: CreateApproveDtoWithAddress) {
     const isPlace = await this.adminRepository.findOne({
       place: createApproveDto.requestPlace,
