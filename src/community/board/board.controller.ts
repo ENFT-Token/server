@@ -42,7 +42,7 @@ export class BoardController {
     @UploadedFiles() files: File[],
   ): Promise<Board> {
     const board = req.body;
-    const user = await this.userService.findByNickName(req.user.nickname);
+    const user = await this.userService.findByAddress(req.user.address);
     return this.boardService.createBoard(board, user, files);
   }
 
