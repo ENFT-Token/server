@@ -46,11 +46,9 @@ export class UserController {
     return this.userService.dupCheckNickName(nickname);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('/myNft')
   @ApiOperation({ summary: 'user가 소유한 nft 출력' })
-  async myNft(@Req() { user }: { user: IUserJwt }) {
-    const { address } = user;
+  async myNft(@Query() { address }: { address: string }) {
     console.log(address);
     if (!address) {
       throw new HttpException(
