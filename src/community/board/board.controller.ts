@@ -46,9 +46,9 @@ export class BoardController {
     return this.boardService.createBoard(board, user, files);
   }
 
-  @Get()
-  async getAllBoard(): Promise<Board[]> {
-    return await this.boardService.getAllBoard();
+  @Get('/:location')
+  async getAllBoard(@Param('location') location: string): Promise<Board[]> {
+    return await this.boardService.getAllBoard(location);
   }
 
   @Get('/:id')
