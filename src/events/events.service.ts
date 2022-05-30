@@ -71,11 +71,20 @@ export class EventsService {
       });
     }
 
+    console.log(
+      chatRooms.map((v) => {
+        const user = users.find((f) => f.roomId === v.roomId);
+        return {
+          ...v,
+          user: user.user,
+        };
+      }),
+    );
     return chatRooms.map((v) => {
       const user = users.find((f) => f.roomId === v.roomId);
       return {
         ...v,
-        user,
+        user: user.user,
       };
     });
   }
