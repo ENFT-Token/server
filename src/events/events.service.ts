@@ -49,13 +49,13 @@ export class EventsService {
         'chat',
         'chat.roomId = chat_room.id AND chat.sendAt = last_chat.sendAt',
       )
-      .where('chat_room.roomId like :roomId', { roomId: `%${user}%` })
       .leftJoinAndMapOne(
         'chat_room.user',
         User,
         'user',
         'chat.roomId like user.nickname',
       )
+      .where('chat_room.roomId like :roomId', { roomId: `%${user}%` })
       .orderBy('chat.sendAt', 'DESC')
       .getMany();
 
