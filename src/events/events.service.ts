@@ -54,13 +54,15 @@ export class EventsService {
       .getMany();
 
     for (const chatRoom of chatRooms) {
-      const otherUser = chatRoom.roomId.split(' ')[1];
+      const otherUserSplit = chatRoom.roomId.split(' ');
+      const otherUser = otherUserSplit[otherUserSplit.length - 1];
       const user = await this.userRepository.findOne({
-        nickname: otherUser,
+        where: { nickname: otherUser },
+        select: ['address', 'location', 'nickname', 'profile', 'sex'],
       });
       (chatRoom as any).user = user;
     }
-
+    console.log(chatRooms);
     return chatRooms;
   }
 }
