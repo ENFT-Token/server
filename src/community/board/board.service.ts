@@ -47,8 +47,9 @@ export class BoardService {
     return board;
   }
 
-  async getAllBoard(): Promise<Board[]> {
-    const boards = await this.boardRepository.find();
+  async getAllBoard(location: string): Promise<Board[]> {
+    const boards = await this.boardRepository.find({location});
     return boards;
   }
+
 }
