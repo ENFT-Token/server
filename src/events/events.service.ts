@@ -49,17 +49,18 @@ export class EventsService {
         'chat',
         'chat.roomId = chat_room.id AND chat.sendAt = last_chat.sendAt',
       )
-      .leftJoinAndMapOne(
-        'chat_room.user',
-        User,
-        'user',
-        'chat.roomId like user.nickname',
-      )
       .where('chat_room.roomId like :roomId', { roomId: `%${user}%` })
       .orderBy('chat.sendAt', 'DESC')
       .getMany();
 
-    console.log(chatRooms);
+    for (const chatRoom of chatRooms) {
+      const otherUser = chatRoom.roomId.split(' ')[1];
+      const user = await this.userRepository.findOne({
+        nickname: otherUser,
+      });
+      (chatRoom as any).user = user;
+    }
+
     return chatRooms;
   }
 }
