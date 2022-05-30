@@ -53,35 +53,29 @@ export class EventsService {
       .orderBy('chat.sendAt', 'DESC')
       .getMany();
 
-    const users: { roomId: number; user: User[] }[] = [];
+    const users: {
+      roomId: string;
+      user: User[];
+    }[] = [];
     // 임시 유저 정보 뽑기
-    for (const chatRoom of chatRooms) {
-      for (const { senderName } of chatRoom.chat) {
-        this.userRepository.find({
-          nickname: senderName,
-        });
-      }
-    }
-    const roomUsers = chatRooms.map((chatRoom) => ({
-      roomId: chatRoom.id,
-      userNicknames: chatRoom.chat.map((v) => v.senderName),
-    }));
-
-    for (const roomUser of roomUsers) {
+    for (const { roomId } of chatRooms) {
       const user = await this.userRepository.find({
-        where: roomUser.userNicknames.map((v) => ({ nickname: v })),
+        where: roomId.split(' ').map((v) => ({
+          nickname: v,
+        })),
         select: ['address', 'location', 'nickname', 'profile'],
       });
       users.push({
-        roomId: roomUser.roomId,
-        user: user,
+        roomId,
+        user,
       });
     }
+
     return chatRooms.map((v) => {
-      const findUser = users.find((f) => f.roomId);
+      const user = users.find((f) => f.roomId === v.roomId);
       return {
         ...v,
-        user: findUser.user,
+        user,
       };
     });
   }
