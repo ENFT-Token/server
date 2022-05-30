@@ -49,43 +49,17 @@ export class EventsService {
         'chat',
         'chat.roomId = chat_room.id AND chat.sendAt = last_chat.sendAt',
       )
+      .leftJoinAndMapOne(
+        'chat_room.user',
+        User,
+        'user',
+        'user.nickname like chat.roomId',
+      )
       .where('chat_room.roomId like :roomId', { roomId: `%${user}%` })
       .orderBy('chat.sendAt', 'DESC')
       .getMany();
 
-    const users: {
-      roomId: string;
-      user: User[];
-    }[] = [];
-    // 임시 유저 정보 뽑기
-    for (const { roomId } of chatRooms) {
-      const user = await this.userRepository.find({
-        where: roomId.split(' ').map((v) => ({
-          nickname: v,
-        })),
-        select: ['address', 'location', 'nickname', 'profile'],
-      });
-      users.push({
-        roomId,
-        user,
-      });
-    }
-
-    console.log(
-      chatRooms.map((v) => {
-        const user = users.find((f) => f.roomId === v.roomId);
-        return {
-          ...v,
-          user: user.user,
-        };
-      }),
-    );
-    return chatRooms.map((v) => {
-      const user = users.find((f) => f.roomId === v.roomId);
-      return {
-        ...v,
-        user: user.user,
-      };
-    });
+    console.log(chatRooms);
+    return chatRooms;
   }
 }
