@@ -69,7 +69,7 @@ export class CheckService {
       await this.todayCountRepository.save({
         place: admin.place,
         date: moment().format('yyyy-MM-DD'),
-        count: 0,
+        count: 1,
       });
     }
   }
