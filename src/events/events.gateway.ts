@@ -93,10 +93,10 @@ export class EventsGateway
       }else realRoomId = roomId2;
     }else realRoomId = roomId1;
     if(!isExist1 && !isExist2){
-      const new_room = this.chatRoomRepository.create({
+      const new_room = await this.chatRoomRepository.create({
         roomId,
       })
-      this.chatRoomRepository.save(new_room);
+      await this.chatRoomRepository.save(new_room);
     }
     return realRoomId;
     
