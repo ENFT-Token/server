@@ -6,7 +6,7 @@ export class ChatRoom {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({unique: true})
   roomId: string;
 
   @OneToMany((type) => Chat, (chat) => chat.roomId, { eager: true })
