@@ -102,9 +102,6 @@ export class EventsGateway
       } catch (error) {
         console.log(error)
       }
-      // try (
-      //   await this.chatRoomRepository.save(new_room);)
-      // catch{}
     }
     return realRoomId;
     
@@ -141,7 +138,7 @@ export class EventsGateway
       roomId: roomId,
     }
     console.log(res)
-    this.server.to(roomId).emit('textMessage', res);
+    client.broadcast.emit('textMessage', res);
   }
 
   async msgSave(data: MsgReq, date: Date){
