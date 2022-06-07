@@ -46,6 +46,18 @@ export class UserController {
     return this.userService.dupCheckNickName(nickname);
   }
 
+  @Post('/location')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'location 변경' })
+  @ApiBody({ type: UserNicknameDto })
+  async changeLocation(
+    @Param() location: string,
+    @Req() req,
+  ){
+    const user = await this.userService.findByAddress(req.user.address);
+    return this.userService.changeLocation(location, user);
+  }
+
   @Get('/myNft')
   @ApiOperation({ summary: 'user가 소유한 nft 출력' })
   async myNft(@Query() { address }: { address: string }) {

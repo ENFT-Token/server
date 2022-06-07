@@ -144,6 +144,12 @@ export class UserService {
     return user;
   }
 
+  async changeLocation(location: string, user: User){
+    user.location = location;
+    this.userRepository.save(user);
+    return user;
+  }
+
   async requestApprove(createApproveDto: CreateApproveDtoWithAddress) {
     const isPlace = await this.adminRepository.findOne({
       place: createApproveDto.requestPlace,
