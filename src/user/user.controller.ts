@@ -49,13 +49,11 @@ export class UserController {
   @Post('/location')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'location 변경' })
-  @ApiBody({ type: UserNicknameDto })
   async changeLocation(
-    @Param() location: string,
     @Req() req,
   ){
     const user = await this.userService.findByAddress(req.user.address);
-    return this.userService.changeLocation(location, user);
+    return this.userService.changeLocation(req.body.location, user);
   }
 
   @Get('/myNft')
