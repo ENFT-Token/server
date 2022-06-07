@@ -139,6 +139,11 @@ export class UserService {
     return user;
   }
 
+  async findProfile(nickname: string){
+    const user = await this.userRepository.findOne({nickname});
+    return user.profile;
+  }
+
   async findByAddress(address: string): Promise<User> {
     const user = await this.userRepository.findOne({ address });
     return user;
