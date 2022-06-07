@@ -28,7 +28,7 @@ interface MsgRes {
 
 interface SocketUsers{
   client: Socket;
-  user: string;
+  user: any;
 }
 
 
@@ -63,11 +63,12 @@ export class EventsGateway
 
   }
 
-  handleConnection(client: Socket, nickname: string) {
+  handleConnection(client: Socket) {
     this.logger.log(`Client connected: ${client.id}`);
+
     this.socketusers.push({
       client,
-      user: nickname,
+      user: client.handshake.query.nickname,
     })
     console.log(this.socketusers)
   }
