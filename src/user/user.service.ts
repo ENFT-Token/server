@@ -139,8 +139,8 @@ export class UserService {
     return user;
   }
 
-  async findProfile(nickname: string){
-    const user = await this.userRepository.findOne({nickname});
+  async findProfile(profile: string){
+    const user = await this.userRepository.findOne({nickname:profile});
     return user.profile;
   }
 

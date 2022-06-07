@@ -47,11 +47,11 @@ export class UserController {
     return this.userService.dupCheckNickName(nickname);
   }
 
-  @Get('/:nickname')
+  @Get('/:profile')
   async findProfile(
-    @Param() nickname: string,
+    @Param() profile: string,
   ){
-    return await this.userService.findProfile(nickname)
+    return await this.userService.findProfile(profile)
   }
 
   @Post('/location')
