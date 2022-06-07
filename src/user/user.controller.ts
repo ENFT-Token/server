@@ -17,7 +17,6 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { profile } from 'console';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CaverService } from 'src/caver/caver.service';
 import { createImageURL, multerOptions } from 'src/lib/multerOptions';
@@ -47,7 +46,7 @@ export class UserController {
     return this.userService.dupCheckNickName(nickname);
   }
 
-  @Get('/:profile')
+  @Get('/profile/:profile')
   async findProfile(
     @Param() profile: string,
   ){
