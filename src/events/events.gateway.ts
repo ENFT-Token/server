@@ -1,4 +1,4 @@
-import { Inject, Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   OnGatewayConnection,
@@ -80,6 +80,7 @@ export class EventsGateway
     console.log(roomId);
     client.join(roomId);
   }
+
   async roomSave(roomId: string){
     const users = roomId.split(" ", 2);
     const roomId1 = users[0] + " " + users[1];
@@ -96,7 +97,14 @@ export class EventsGateway
       const new_room = await this.chatRoomRepository.create({
         roomId,
       })
-      await this.chatRoomRepository.save(new_room);
+      try {
+        await this.chatRoomRepository.save(new_room);
+      } catch (error) {
+        console.log(error)
+      }
+      // try (
+      //   await this.chatRoomRepository.save(new_room);)
+      // catch{}
     }
     return realRoomId;
     
