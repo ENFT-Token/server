@@ -26,6 +26,11 @@ interface MsgRes {
   sendAt: Date;
 }
 
+interface SocketUsers{
+  client: Socket;
+  user: string;
+}
+
 
 @WebSocketGateway(8080, {
   path: '/chat',
@@ -43,6 +48,7 @@ export class EventsGateway
     @InjectRepository(ChatRoom)
     private chatRoomRepository: Repository<ChatRoom>,
   ){}
+  private socketusers: SocketUsers[] = [];
   private logger: Logger = new Logger('ChatGateway');
   @WebSocketServer()
   server: Server;
@@ -52,12 +58,20 @@ export class EventsGateway
   }
 
   handleDisconnect(client: Socket) {
+    this.socketusers = this.socketusers.filter(socketusers => socketusers.client !== client);
     this.logger.log(`Client disconnected: ${client.id}`);
+
   }
 
-  handleConnection(client: Socket, ...args: any[]) {
+  handleConnection(client: Socket, nickname: string) {
     this.logger.log(`Client connected: ${client.id}`);
+    this.socketusers.push({
+      client,
+      user: nickname,
+    })
+    console.log(this.socketusers)
   }
+  
 
   @SubscribeMessage('createRoom')
   createChatRoom(client: Socket, roomId: string) {
@@ -91,6 +105,12 @@ export class EventsGateway
   enterChatRoom(client: Socket, roomId: string) {
     console.log(roomId);
     client.join(roomId);
+    const users = roomId.split(" ", 2);
+    const otherClient = this.socketusers.find(socketusers =>socketusers.user === users[1]);
+    console.log(otherClient.user)
+    if(otherClient){
+      otherClient.client.join(roomId);
+    }
   }
 
 
