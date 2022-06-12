@@ -57,7 +57,7 @@ export class CheckController {
   })
   @Get('/month_minting')
   async monthMinting(@Req() { user }: { user: IAdminJwt }) {
-    const count = await this.checkService.randomMonthCount();
+    const count = await this.checkService.randomMonthCount(30);
     return count;
   }
 
@@ -66,7 +66,7 @@ export class CheckController {
   })
   @Get('/month_count')
   async monthCheckin(@Req() { user }: { user: IAdminJwt }) {
-    const count = await this.checkService.randomMonthCount();
+    const count = await this.checkService.randomMonthCount(0);
     return count;
   }
 

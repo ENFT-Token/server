@@ -44,7 +44,7 @@ export class CheckService {
     return today?.count ? today.count : 0;
   }
 
-  async randomMonthCount() {
+  async randomMonthCount(start_num: number) {
     // const today = await this.todayCountRepository.findOne({
     //   date: moment().format('yyyy-MM-DD'),
     //   place: place,
@@ -53,7 +53,7 @@ export class CheckService {
       .fill(0)
       .map((_, idx) => ({
         date: moment().days(-idx).format('yyyy-MM-DD'),
-        count: parseInt(String(Math.random() * 30)),
+        count: parseInt(String(Math.random() * 30)) + start_num,
       }));
   }
 
