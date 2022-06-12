@@ -55,7 +55,7 @@ export class CheckController {
   @ApiOperation({
     summary: '한달 헬스장 가입자 명 수',
   })
-  @Get('/month_count')
+  @Get('/month_minting')
   async monthMinting(@Req() { user }: { user: IAdminJwt }) {
     const count = await this.checkService.randomMonthCount();
     return count;
