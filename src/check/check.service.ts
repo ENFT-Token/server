@@ -44,6 +44,19 @@ export class CheckService {
     return today?.count ? today.count : 0;
   }
 
+  async randomMonthCount() {
+    // const today = await this.todayCountRepository.findOne({
+    //   date: moment().format('yyyy-MM-DD'),
+    //   place: place,
+    // });
+    return Array(30)
+      .fill(0)
+      .map((_, idx) => ({
+        date: moment().days(-idx).format('yyyy-MM-DD'),
+        count: parseInt(String(Math.random() * 30)),
+      }));
+  }
+
   isCheckIn(checkUser: User[], address: string) {
     const idx = checkUser.findIndex((user) => user.address === address);
     return idx === -1 ? false : true;

@@ -51,6 +51,25 @@ export class CheckController {
       count,
     };
   }
+
+  @ApiOperation({
+    summary: '한달 헬스장 가입자 명 수',
+  })
+  @Get('/month_count')
+  async monthMinting(@Req() { user }: { user: IAdminJwt }) {
+    const count = await this.checkService.randomMonthCount();
+    return count;
+  }
+
+  @ApiOperation({
+    summary: '한달 헬스장 체크인 명 수',
+  })
+  @Get('/month_count')
+  async monthCheckin(@Req() { user }: { user: IAdminJwt }) {
+    const count = await this.checkService.randomMonthCount();
+    return count;
+  }
+
   @ApiOperation({
     summary: '현재 헬스장 체크인 명 수',
   })
